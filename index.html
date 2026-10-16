@@ -1,0 +1,1232 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Libro del Inspector</title>
+<meta name="theme-color" content="#2346A0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: app de una columna pensada para celular (máx. 560px), barra superior con racha y puntos, navegación inferior fija */
+:root {
+  --bg: #F3F5FA;
+  --surface: #FFFFFF;
+  --surface-2: #E9EDF6;
+  --ink: #141B2E;
+  --muted: #5A6480;
+  --line: #D6DCEA;
+  --primary: #2346A0;
+  --primary-press: #172F70;
+  --on-primary: #FFFFFF;
+  --copper: #B4531C;
+  --copper-soft: #FBE6D6;
+  --gold: #E3A21A;
+  --gold-soft: #FDF1D2;
+  --good: #1E8A4C;
+  --good-press: #146536;
+  --good-soft: #DCF3E5;
+  --bad: #C73A3A;
+  --bad-soft: #FBE1E1;
+  --mid: #9A6A00;
+  --mid-soft: #FBF0D4;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Nunito", "Segoe UI", system-ui, sans-serif;
+  --r: 16px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1322; --surface: #172036; --surface-2: #212C47; --ink: #EAF0FF; --muted: #A2AEC9; --line: #2D3A5A;
+    --primary: #7FA2FF; --primary-press: #5579D9; --on-primary: #0B1430; --copper: #F09A62; --copper-soft: #3D2516;
+    --gold: #F5C04F; --gold-soft: #3A2E10; --good: #5BD58F; --good-press: #2FA864; --good-soft: #143326;
+    --bad: #FF8C8C; --bad-soft: #3E1A1F; --mid: #F2C14E; --mid-soft: #3A2E12;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E1322; --surface: #172036; --surface-2: #212C47; --ink: #EAF0FF; --muted: #A2AEC9; --line: #2D3A5A;
+  --primary: #7FA2FF; --primary-press: #5579D9; --on-primary: #0B1430; --copper: #F09A62; --copper-soft: #3D2516;
+  --gold: #F5C04F; --gold-soft: #3A2E10; --good: #5BD58F; --good-press: #2FA864; --good-soft: #143326;
+  --bad: #FF8C8C; --bad-soft: #3E1A1F; --mid: #F2C14E; --mid-soft: #3A2E12;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 17px; line-height: 1.5; }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.15; text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+p { margin: 0; }
+button { font: inherit; color: inherit; cursor: pointer; }
+a { color: var(--primary); }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); border-bottom: 1px solid var(--line); }
+.top-in { max-width: 560px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
+.brand { font-family: var(--font-display); font-weight: 800; font-size: 1.05rem; color: var(--primary); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pill { display: inline-flex; align-items: center; gap: 5px; font-weight: 800; font-variant-numeric: tabular-nums; font-size: 0.95rem; padding: 4px 10px; border-radius: 99px; background: var(--surface); border: 1px solid var(--line); }
+.pill svg { width: 18px; height: 18px; }
+.pill.fire { color: var(--copper); }
+.pill.fire.off { color: var(--muted); }
+.pill.xp { color: var(--gold); }
+.pill.xp b { color: var(--ink); }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--primary); color: var(--on-primary); display: grid; place-items: center; font-weight: 800; border: 0; flex: none; }
+
+main { max-width: 560px; margin: 0 auto; padding-inline: 16px; padding-block: 18px calc(96px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 18px; }
+.nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; background: var(--surface); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px); }
+.nav-in { max-width: 560px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); }
+.nav button { border: 0; background: none; padding: 8px 2px 10px; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 0.72rem; font-weight: 800; color: var(--muted); }
+.nav button svg { width: 24px; height: 24px; }
+.nav button[aria-current="page"] { color: var(--primary); }
+
+.eyebrow { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 800; }
+.muted { color: var(--muted); }
+.small { font-size: 0.88rem; }
+.stack { display: flex; flex-direction: column; gap: 12px; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.between { justify-content: space-between; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+
+/* botones con relieve, al estilo de apps de microaprendizaje */
+.btn { border: 0; border-radius: 14px; padding: 13px 18px; font-weight: 800; font-size: 1rem; background: var(--surface); color: var(--ink); box-shadow: 0 3px 0 var(--line), inset 0 0 0 2px var(--line); transition: transform .08s; }
+.btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--line), inset 0 0 0 2px var(--line); }
+.btn.primary { background: var(--primary); color: var(--on-primary); box-shadow: 0 4px 0 var(--primary-press); }
+.btn.primary:active { box-shadow: 0 2px 0 var(--primary-press); }
+.btn.good { background: var(--good); color: var(--surface); box-shadow: 0 4px 0 var(--good-press); }
+.btn.block { width: 100%; }
+.btn:disabled { opacity: 0.5; cursor: default; transform: none; }
+.link { background: none; border: 0; padding: 0; color: var(--primary); font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
+
+/* hero del día */
+.hero { background: var(--primary); color: var(--on-primary); border-radius: 22px; padding: 18px; display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; }
+.hero h2 { font-size: 1.45rem; }
+.hero p { opacity: 0.9; font-size: 0.95rem; }
+.ring { width: 84px; height: 84px; position: relative; }
+.ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring .lbl { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; font-weight: 800; font-size: 0.85rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.day { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 0.72rem; font-weight: 800; color: var(--muted); }
+.day i { width: 30px; height: 30px; border-radius: 50%; background: var(--surface-2); display: grid; place-items: center; font-style: normal; color: var(--muted); }
+.day.done i { background: var(--copper); color: var(--surface); }
+.day.today b { color: var(--ink); }
+
+.challenge { background: var(--gold-soft); border: 2px solid var(--gold); border-radius: var(--r); padding: 16px; display: flex; gap: 14px; align-items: center; }
+.challenge .medal { width: 54px; height: 54px; flex: none; border-radius: 50%; background: var(--gold); display: grid; place-items: center; color: var(--surface); }
+.challenge .medal svg { width: 30px; height: 30px; }
+.challenge h3 { font-size: 1.1rem; }
+.challenge > div:nth-child(2) { flex: 1; min-width: 0; }
+
+.tiles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.tile { text-align: left; border: 0; background: var(--surface); border-radius: var(--r); padding: 14px; box-shadow: 0 3px 0 var(--line), inset 0 0 0 2px var(--line); display: flex; flex-direction: column; gap: 4px; }
+.tile:active { transform: translateY(2px); }
+.tile .ic { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; margin-bottom: 4px; }
+.tile .ic svg { width: 24px; height: 24px; }
+.tile h3 { font-size: 1.02rem; }
+.tile p { font-size: 0.82rem; color: var(--muted); }
+
+.modules { display: flex; flex-direction: column; gap: 8px; }
+.mod { display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; text-align: left; }
+.mod .mi { width: 44px; height: 44px; border-radius: 12px; background: var(--surface-2); color: var(--primary); display: grid; place-items: center; font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; }
+.mod h3 { font-family: var(--font-body); font-size: 0.98rem; font-weight: 800; }
+.mod > div { min-width: 0; }
+.mod .pct { font-weight: 800; font-variant-numeric: tabular-nums; color: var(--muted); font-size: 0.9rem; }
+.bar { height: 8px; background: var(--surface-2); border-radius: 99px; overflow: hidden; margin-top: 6px; }
+.bar i { display: block; height: 100%; background: var(--good); border-radius: 99px; transition: width .4s; }
+.bar.xpbar i { background: var(--gold); }
+
+.chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; margin-inline: -16px; padding-inline: 16px; }
+.chip { flex: none; border: 2px solid var(--line); background: var(--surface); padding: 6px 12px; border-radius: 99px; font-size: 0.85rem; font-weight: 800; color: var(--muted); }
+.chip[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+
+/* fichas */
+.flash-wrap { perspective: 1400px; }
+.flash { position: relative; width: 100%; border: 0; padding: 0; background: none; text-align: left; transform-style: preserve-3d; transition: transform .45s cubic-bezier(.2,.7,.2,1); display: grid; }
+.flash.flipped { transform: rotateY(180deg); }
+.face { grid-area: 1 / 1; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 22px; padding: 22px; display: flex; flex-direction: column; gap: 12px; min-height: 340px; }
+.front { background: var(--surface); box-shadow: 0 4px 0 var(--line), inset 0 0 0 2px var(--line); }
+.back { background: var(--primary); color: var(--on-primary); transform: rotateY(180deg); }
+.front h2 { font-size: clamp(1.4rem, 6vw, 1.8rem); margin-block: auto; }
+.back p.ans { font-size: 1.04rem; margin-block: auto; }
+.face .hint { font-size: 0.82rem; opacity: 0.75; font-weight: 700; }
+.box-dots { display: flex; gap: 4px; }
+.box-dots i { width: 18px; height: 6px; border-radius: 4px; background: var(--surface-2); }
+.box-dots i.on { background: var(--good); }
+.src { font-size: 0.8rem; line-height: 1.35; display: flex; flex-direction: column; gap: 3px; }
+.src a { font-weight: 700; word-break: break-word; }
+.back .src a { color: var(--on-primary); }
+.src .lab { font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.7rem; opacity: 0.8; }
+
+/* preguntas y casos */
+.runner-top { display: flex; align-items: center; gap: 12px; }
+.x { width: 36px; height: 36px; border-radius: 50%; border: 0; background: var(--surface-2); color: var(--muted); display: grid; place-items: center; flex: none; }
+.x svg { width: 18px; height: 18px; }
+.progress { flex: 1; height: 14px; background: var(--surface-2); border-radius: 99px; overflow: hidden; }
+.progress i { display: block; height: 100%; background: var(--good); border-radius: 99px; transition: width .35s; }
+.qtitle { font-size: 1.3rem; }
+.opts { display: flex; flex-direction: column; gap: 10px; }
+.opt { text-align: left; border: 0; background: var(--surface); border-radius: 14px; padding: 14px; display: grid; grid-template-columns: 30px 1fr; gap: 12px; align-items: start; box-shadow: 0 3px 0 var(--line), inset 0 0 0 2px var(--line); }
+.opt .k { width: 30px; height: 30px; border-radius: 9px; background: var(--surface-2); display: grid; place-items: center; font-weight: 800; font-size: 0.85rem; }
+.opt span:last-child { min-width: 0; }
+.opt:disabled { cursor: default; }
+.opt.is-good { background: var(--good-soft); box-shadow: 0 3px 0 var(--good), inset 0 0 0 2px var(--good); }
+.opt.is-good .k { background: var(--good); color: var(--surface); }
+.opt.is-bad { background: var(--bad-soft); box-shadow: 0 3px 0 var(--bad), inset 0 0 0 2px var(--bad); }
+.opt.is-bad .k { background: var(--bad); color: var(--surface); }
+.opt.is-mid { background: var(--mid-soft); box-shadow: 0 3px 0 var(--mid), inset 0 0 0 2px var(--mid); }
+.opt.is-mid .k { background: var(--mid); color: var(--surface); }
+.opt.dim { opacity: 0.5; }
+.sheet { border-radius: var(--r); padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.sheet.good { background: var(--good-soft); }
+.sheet.bad { background: var(--bad-soft); }
+.sheet.mid { background: var(--mid-soft); }
+.sheet h3 { font-size: 1.15rem; }
+.sheet.good h3 { color: var(--good); } .sheet.bad h3 { color: var(--bad); } .sheet.mid h3 { color: var(--mid); }
+.combo { font-weight: 800; color: var(--copper); font-size: 0.9rem; }
+.scenario { background: var(--copper-soft); border-radius: 14px; padding: 14px 16px; }
+.steplog { display: flex; flex-direction: column; gap: 6px; font-size: 0.9rem; }
+.steplog div { display: flex; gap: 8px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 7px; flex: none; }
+.dot.p2 { background: var(--good); } .dot.p1 { background: var(--mid); } .dot.p0 { background: var(--bad); }
+.big { font-family: var(--font-display); font-size: 3.2rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.result { text-align: center; align-items: center; }
+.gain { display: inline-flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.gain span { background: var(--gold-soft); color: var(--ink); border-radius: 99px; padding: 6px 12px; font-weight: 800; font-size: 0.9rem; }
+.level { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; padding: 3px 8px; border-radius: 99px; background: var(--surface-2); color: var(--muted); }
+.level.adv { background: var(--copper-soft); color: var(--copper); }
+.missed div { border-top: 1px solid var(--line); padding-top: 10px; font-size: 0.92rem; display: flex; flex-direction: column; gap: 2px; }
+.missed .ans { color: var(--good); font-weight: 700; }
+ul.keys { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
+
+.cases { display: flex; flex-direction: column; gap: 10px; }
+.case { text-align: left; border: 0; background: var(--surface); border-radius: var(--r); padding: 14px; display: flex; flex-direction: column; gap: 6px; box-shadow: 0 3px 0 var(--line), inset 0 0 0 2px var(--line); }
+.case h3 { font-size: 1.08rem; }
+.case p { color: var(--muted); font-size: 0.88rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.stars { color: var(--gold); font-weight: 800; letter-spacing: 2px; }
+
+/* perfil */
+.badges { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.badge { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; font-size: 0.75rem; font-weight: 800; padding: 10px 4px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); }
+.badge .b { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-2); color: var(--muted); }
+.badge .b svg { width: 26px; height: 26px; }
+.badge.on .b { background: var(--gold); color: var(--surface); }
+.badge:not(.on) { color: var(--muted); }
+.seg { display: inline-flex; background: var(--surface-2); border-radius: 12px; padding: 3px; gap: 2px; flex-wrap: wrap; }
+.seg button { border: 0; background: none; padding: 8px 12px; border-radius: 10px; font-weight: 800; font-size: 0.88rem; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgb(0 0 0 / 0.15); }
+.account { display: flex; gap: 12px; align-items: center; }
+.account .avatar { width: 48px; height: 48px; font-size: 1.2rem; }
+.status { font-size: 0.82rem; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; }
+.status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+.status.ok { color: var(--good); } .status.ok::before { background: var(--good); }
+.status.warn { color: var(--mid); } .status.warn::before { background: var(--mid); }
+.srcitem { border-top: 1px solid var(--line); padding-top: 10px; display: flex; flex-direction: column; gap: 2px; font-size: 0.92rem; }
+.srcitem:first-child { border-top: 0; padding-top: 0; }
+.note { background: var(--copper-soft); border-radius: 14px; padding: 12px 14px; font-size: 0.88rem; }
+
+.toast { position: fixed; left: 50%; top: calc(64px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); z-index: 30; background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 14px; font-weight: 800; font-size: 0.92rem; box-shadow: 0 6px 20px rgb(0 0 0 / 0.25); max-width: calc(100% - 32px); text-align: center; animation: pop .25s ease-out; }
+@keyframes pop { from { transform: translate(-50%, -8px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+#login { position: fixed; inset: 0; z-index: 40; background: var(--bg); overflow-y: auto; padding: calc(24px + env(safe-area-inset-top, 0px)) 16px calc(24px + env(safe-area-inset-bottom, 0px)); }
+.login-in { max-width: 420px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+.fld { display: flex; flex-direction: column; gap: 6px; font-weight: 800; font-size: 0.92rem; }
+.fld input { font: inherit; font-weight: 600; padding: 13px 14px; border-radius: 12px; border: 2px solid var(--line); background: var(--surface); color: var(--ink); width: 100%; }
+.fld input:focus { border-color: var(--primary); outline: none; }
+.lerr { color: var(--bad); font-weight: 700; font-size: 0.9rem; min-height: 1.2em; }
+#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 25; width: 100%; height: 100%; }
+@media (prefers-reduced-motion: reduce) {
+  .flash, .bar i, .progress i, .btn { transition: none; }
+  .toast { animation: none; }
+}
+</style>
+
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <span class="brand">Libro del Inspector</span>
+    <span class="pill fire" id="pStreak" title="Racha de días"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c1 3.5-1.5 5-1.5 7.5 0 1.4 1 2.5 2.3 2.5 1.6 0 2.4-1.3 2.2-3.2C17.6 10.6 19 13 19 15.5 19 19.6 15.9 22 12 22s-7-2.4-7-6.3C5 10.4 10.8 7.7 12 2Z"/></svg><span>0</span></span>
+    <span class="pill xp" id="pXp" title="Puntos de experiencia"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg><b>0</b></span>
+    <button class="avatar" id="pAvatar" aria-label="Mi perfil">?</button>
+  </div>
+</header>
+<main id="app"></main>
+<nav class="nav" aria-label="Secciones">
+  <div class="nav-in">
+    <button data-view="inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Inicio</button>
+    <button data-view="fichas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/></svg>Fichas</button>
+    <button data-view="preguntas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14"/><path d="M12 17.5h.01"/></svg>Preguntas</button>
+    <button data-view="casos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg>Casos</button>
+    <button data-view="perfil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Perfil</button>
+  </div>
+</nav>
+<section id="login" hidden></section>
+<canvas id="confetti" hidden></canvas>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+const BCN = id => "https://www.bcn.cl/leychile/navegar?idNorma=" + id;
+const FUENTES = {
+  lge:     { n: "DFL 2 de 2009, Ley General de Educación (texto refundido Ley 20.370)", org: "BCN · Ley Chile", u: BCN(1014974) },
+  l21809:  { n: "Ley 21.809 sobre convivencia, buen trato y bienestar de las comunidades educativas (vigente desde el 1 de julio de 2026)", org: "BCN · Ley Chile", u: BCN(1222799) },
+  l21827:  { n: "Ley 21.827, medidas de seguridad, orden y respeto para la comunidad educativa «Escuelas Protegidas» (agosto 2026)", org: "BCN · Ley Chile", u: BCN(1226950) },
+  dfl2_98: { n: "DFL 2 de 1998, Ley de Subvenciones", org: "BCN · Ley Chile", u: BCN(127911) },
+  l21128:  { n: "Ley 21.128 Aula Segura", org: "BCN · Ley Chile", u: BCN(1127100) },
+  l20845:  { n: "Ley 20.845 de Inclusión Escolar", org: "BCN · Ley Chile", u: BCN(1078172) },
+  l20529:  { n: "Ley 20.529, Sistema Nacional de Aseguramiento de la Calidad", org: "BCN · Ley Chile", u: BCN(1028635) },
+  l21430:  { n: "Ley 21.430 sobre Garantías y Protección Integral de los Derechos de la Niñez", org: "BCN · Ley Chile", u: BCN(1173643) },
+  l21643:  { n: "Ley 21.643 (Ley Karin)", org: "BCN · Ley Chile", u: BCN(1200096) },
+  l21057:  { n: "Ley 21.057 de entrevistas videograbadas", org: "BCN · Ley Chile", u: BCN(1113932) },
+  l20000:  { n: "Ley 20.000 sobre tráfico de estupefacientes", org: "BCN · Ley Chile", u: BCN(235507) },
+  l20594:  { n: "Ley 20.594, inhabilidades para trabajar con menores de edad", org: "BCN · Ley Chile", u: BCN(1041136) },
+  cpp:     { n: "Código Procesal Penal (Ley 19.696)", org: "BCN · Ley Chile", u: BCN(176595) },
+  cp:      { n: "Código Penal", org: "BCN · Ley Chile", u: BCN(1984) },
+  estatuto:{ n: "DFL 1 de 1996, Estatuto de los Profesionales de la Educación", org: "BCN · Ley Chile", u: BCN(60439) },
+  l19464:  { n: "Ley 19.464, personal asistente de la educación", org: "BCN · Ley Chile", u: BCN(30831) },
+  ds313:   { n: "Decreto Supremo 313 de 1973, seguro escolar", org: "BCN · Ley Chile", u: BCN(74448) },
+  seguro:  { n: "Seguro contra accidentes escolares", org: "ChileAtiende", u: "https://www.chileatiende.gob.cl/fichas/40068-seguro-contra-accidentes-escolares" },
+  d67:     { n: "Orientaciones para la implementación del Decreto 67 de 2018 (evaluación y promoción)", org: "Mineduc", u: "https://bibliotecadigital.mineduc.cl/bitstream/handle/20.500.12365/14279/orientaciones%20decreto%2067.pdf" },
+  asist:   { n: "Caracterización de la asistencia escolar", org: "Mineduc · Cada Día Cuenta", u: "https://cadadiacuenta.mineduc.cl/images/caracterizacion-ausentismo-cronico-2018.pdf" },
+  d215:    { n: "Decreto 215 de 2009 sobre uniforme escolar (nota de la Seremi de Aysén, 2026)", org: "Mineduc", u: "https://aysen.mineduc.cl/2026/02/26/atencion-apoderados-autoridades-recuerdan-la-normativa-respecto-a-utiles-textos-y-uniformes-de-cara-al-regreso-a-clases/" },
+  c482:    { n: "Circular 482 sobre reglamentos internos (sigue vigente según Res. Ex. 324 de 2026)", org: "Superintendencia de Educación · Diario Oficial", u: "https://www.diariooficial.interior.gob.cl/publicaciones/2026/05/07/44443/01/2805316.pdf" },
+  pise:    { n: "Resolución Exenta 2515 de 2018, Plan Integral de Seguridad Escolar", org: "BCN · Ley Chile", u: BCN(1119259) },
+  senda:   { n: "SENDA Previene en la Comunidad", org: "SENDA", u: "https://www.senda.gob.cl" }
+};
+
+const MODULOS = [
+  { id: "rol", nombre: "Rol y funciones", icon: "R", desc: "Qué hace un inspector, cómo registra y qué piden al postular." },
+  { id: "norma", nombre: "Marco normativo", icon: "N", desc: "Leyes, circulares e instituciones del sistema escolar chileno." },
+  { id: "conv", nombre: "Convivencia educativa", icon: "C", desc: "Ley 21.809, acoso escolar, reglamento interno y equipo de convivencia." },
+  { id: "prot", nombre: "Protocolos", icon: "P", desc: "Vulneración de derechos, abuso, drogas, ciberacoso y embarazo." },
+  { id: "proc", nombre: "Medidas y debido proceso", icon: "M", desc: "Faltas, suspensión, Aula Segura, expulsión y Escuelas Protegidas." },
+  { id: "seg", nombre: "Seguridad y asistencia", icon: "S", desc: "Accidentes, seguro escolar, retiros, asistencia y emergencias." }
+];
+
+// s: [[fuente, detalle], ...]
+const FICHAS = [
+  { id: "f1", m: "rol", t: "¿Qué hace un inspector educacional?", r: "Apoya la convivencia y el funcionamiento diario del colegio o liceo: controla asistencia, atrasos y retiros, supervisa recreos, entrada y salida, atiende apoderados y da la primera respuesta ante incidentes, siguiendo el reglamento interno.", s: [["c482", "reglamento interno y protocolos"]] },
+  { id: "f2", m: "rol", t: "Inspector general e inspector de patio", r: "El inspector general es docente directivo según el Estatuto Docente. El inspector de patio o paradocente es asistente de la educación: la Ley 19.464 define la paradocencia como labor «de nivel técnico, complementaria a la labor educativa».", s: [["estatuto"], ["l19464", "art. 2"]] },
+  { id: "f3", m: "rol", t: "Requisitos para trabajar como paradocente", r: "La Ley 19.464 exige licencia de enseñanza media para la función de paradocencia y, cuando corresponda, un título de nivel técnico. Revisa siempre las bases de cada concurso o aviso.", s: [["l19464", "art. 2"]] },
+  { id: "f4", m: "rol", t: "Inhabilidades para trabajar con niños", r: "La Ley 20.594 crea inhabilidades para trabajar con menores de edad para personas condenadas por delitos sexuales contra ellos, y un registro que los empleadores pueden consultar.", s: [["l20594"]] },
+  { id: "f5", m: "rol", t: "Regla de oro del registro", r: "Registra hechos, no opiniones: fecha, hora, lugar, personas, lo que viste y lo que te dijeron con sus palabras. Un buen registro sostiene el debido proceso y la protección de los estudiantes.", s: [["c482", "debido proceso"]] },
+  { id: "f6", m: "rol", t: "Deber de reportar", r: "Con la Ley 21.809, el personal y los adultos de la comunidad tienen el deber de reportar al equipo directivo, o a quien indique el reglamento, los hechos que puedan ser acoso, violencia o discriminación.", s: [["l21809", "art. 16 E letra f LGE"]] },
+  { id: "f7", m: "rol", t: "Ley Karin en el colegio", r: "La Ley 21.643 previene y sanciona el acoso laboral, el acoso sexual y la violencia en el trabajo. Protege y obliga a todos los funcionarios, incluidos los inspectores.", s: [["l21643"]] },
+
+  { id: "f8", m: "norma", t: "Ley General de Educación (LGE)", r: "Su texto vigente está en el DFL 2 de 2009. Fija derechos y deberes de la comunidad educativa y, desde 2026, las reglas de convivencia educativa incorporadas por la Ley 21.809.", s: [["lge"], ["l21809"]] },
+  { id: "f9", m: "norma", t: "Ley 21.809 de convivencia (2026)", r: "Publicada el 1 de abril de 2026 y vigente desde el 1 de julio de 2026. Habla de «convivencia educativa», crea la coordinación de convivencia educativa y exige protocolos contra acoso, violencia y discriminación.", s: [["l21809"]] },
+  { id: "f10", m: "norma", t: "Ley 21.827 Escuelas Protegidas (2026)", r: "Publicada el 12 de agosto de 2026. Permite revisar mochilas si el reglamento interno lo contempla, prohíbe prendas que impidan identificar el rostro y permite restringir el ingreso de apoderados que agredan.", s: [["l21827"]] },
+  { id: "f11", m: "norma", t: "Ley 20.845 de Inclusión", r: "No se puede expulsar, cancelar la matrícula ni suspender por razones socioeconómicas o de rendimiento académico. Antes de expulsar, el director debe advertir a la familia y aplicar medidas de apoyo, salvo conductas que atenten directamente contra la integridad de alguien.", s: [["l20845"], ["dfl2_98", "art. 6 d"]] },
+  { id: "f12", m: "norma", t: "Ley 21.128 Aula Segura", r: "Permite al director suspender como medida cautelar durante un procedimiento sancionatorio por conductas graves o gravísimas. Hay 10 días hábiles para resolver y 5 días para pedir reconsideración.", s: [["l21128"], ["dfl2_98", "art. 6 d"]] },
+  { id: "f13", m: "norma", t: "Superintendencia y Agencia de Calidad", r: "La Superintendencia de Educación fiscaliza el cumplimiento de la normativa. La Agencia de Calidad evalúa y orienta. Ambas forman parte del Sistema de Aseguramiento de la Calidad.", s: [["l20529"]] },
+  { id: "f14", m: "norma", t: "Circular 482", r: "Instrucciones de la Superintendencia sobre reglamentos internos en básica y media. Sigue vigente: en abril de 2026 se derogaron las circulares 781 y 782 que iban a reemplazarla.", s: [["c482"]] },
+  { id: "f15", m: "norma", t: "Oficinas Locales de la Niñez (OLN)", r: "Creadas en el sistema de la Ley 21.430. Niños, niñas y adolescentes pueden acudir a ellas para pedir información, orientación o ayuda.", s: [["l21430", "art. 11"]] },
+
+  { id: "f16", m: "conv", t: "Buena convivencia educativa", r: "La coexistencia armónica de los miembros de la comunidad educativa, con relaciones inclusivas y participativas, que favorece el aprendizaje y el bienestar.", s: [["l21809", "art. 16 A LGE"]] },
+  { id: "f17", m: "conv", t: "Acoso escolar", r: "Toda acción u omisión de agresión u hostigamiento reiterado, por estudiantes en forma individual o colectiva, que provoque maltrato, humillación o fundado temor, o un clima hostil. Puede ocurrir dentro o fuera del colegio y por medios tecnológicos.", s: [["l21809", "art. 16 B LGE"]] },
+  { id: "f18", m: "conv", t: "Conflicto, violencia y acoso", r: "Un conflicto es un desacuerdo que se puede resolver dialogando. La violencia es una agresión. El acoso es una agresión u hostigamiento reiterado que genera temor o un clima hostil.", s: [["l21809", "art. 16 B LGE"]] },
+  { id: "f19", m: "conv", t: "Coordinador/a de convivencia educativa", r: "Lidera el equipo de convivencia del establecimiento, implementa el Plan de Gestión de Convivencia Educativa y asesora a la dirección. Es el principal destino de tus derivaciones.", s: [["l21809", "art. 16 H LGE"]] },
+  { id: "f20", m: "conv", t: "Reglamento interno", r: "Regula las relaciones dentro del establecimiento: normas, faltas, medidas, procedimientos y protocolos. Se entrega a las familias al matricular y sus cambios se informan durante el año.", s: [["dfl2_98", "art. 6 d"], ["l21809"]] },
+  { id: "f21", m: "conv", t: "Evitar la revictimización", r: "Los procedimientos de convivencia deben ser racionales, justos, confidenciales y proporcionales, y evitar la revictimización. Por eso no se cita a una víctima de acoso a «arreglarse» frente a quien la agrede.", s: [["l21809"]] },
+  { id: "f22", m: "conv", t: "Violencia de un adulto hacia un estudiante", r: "Es especialmente grave cuando la comete quien tiene una posición de autoridad, como directivos, docentes o asistentes de la educación.", s: [["l21809", "art. 16 B LGE"]] },
+  { id: "f23", m: "conv", t: "Violencia contra trabajadores de la educación", r: "La Ley 21.809 considera violencia laboral la que terceros, como apoderados, ejercen contra trabajadores de la educación. La Ley 21.827 permite restringir el ingreso de apoderados que agredan.", s: [["l21809"], ["l21827", "art. 7"]] },
+
+  { id: "f24", m: "prot", t: "Obligación de denunciar", r: "Directores, inspectores y profesores deben denunciar los delitos que afecten a estudiantes o que ocurran en el establecimiento. El plazo es de 24 horas desde que conocen el hecho, ante Carabineros, PDI o Fiscalía.", s: [["cpp", "arts. 175 letra e y 176"]] },
+  { id: "f25", m: "prot", t: "Ante un relato de abuso", r: "Escucha con calma y no interrogues. No prometas guardar el secreto, porque tienes la obligación de informar y denunciar. Registra sus palabras textuales e informa de inmediato al equipo directivo.", s: [["cpp", "art. 175"], ["l21057", "art. 1"]] },
+  { id: "f26", m: "prot", t: "¿Por qué no interrogar?", r: "La Ley 21.057 busca prevenir la victimización secundaria. Establece entrevistas videograbadas con especialistas para evitar que niños y niñas repitan su relato muchas veces.", s: [["l21057", "arts. 1 y 5"]] },
+  { id: "f27", m: "prot", t: "Drogas: consumo y tráfico", r: "Entregar o vender pequeñas cantidades a otra persona es microtráfico, un delito que se denuncia. El consumo se aborda con apoyo y derivación a la red, por ejemplo SENDA Previene.", s: [["l20000", "art. 4"], ["senda"]] },
+  { id: "f28", m: "prot", t: "Imágenes íntimas de menores", r: "Almacenar o difundir material sexual de menores es delito. Nunca lo reenvíes ni lo guardes como «evidencia»: resguarda el equipo e informa para denunciar.", s: [["cp", "art. 374 bis"], ["cpp", "art. 175"]] },
+  { id: "f29", m: "prot", t: "Estudiantes embarazadas, madres y padres", r: "El embarazo y la maternidad no impiden ingresar ni permanecer en el establecimiento. El colegio debe dar facilidades académicas para que continúen sus estudios.", s: [["lge", "art. 11"]] },
+  { id: "f30", m: "prot", t: "Protocolos que exige la Circular 482", r: "Vulneración de derechos; agresiones sexuales y hechos de connotación sexual; maltrato y acoso escolar; drogas y alcohol; accidentes escolares; estudiantes embarazadas, madres y padres; salidas pedagógicas.", s: [["c482"]] },
+
+  { id: "f31", m: "proc", t: "Debido proceso", r: "Conocer los hechos imputados, ser escuchado y presentar descargos, presunción de inocencia, resolución fundada y derecho a pedir reconsideración.", s: [["dfl2_98", "art. 6 d"], ["c482"]] },
+  { id: "f32", m: "proc", t: "Se privilegian las medidas formativas", r: "La Ley 21.809 pide preferir medidas formativas y pedagógicas, proporcionales a la falta. La expulsión es excepcional.", s: [["l21809"]] },
+  { id: "f33", m: "proc", t: "Suspensión", r: "Máximo 5 días hábiles, prorrogable excepcionalmente una vez por igual período. Debe estar en el reglamento interno y aplicarse con debido proceso.", s: [["c482"]] },
+  { id: "f34", m: "proc", t: "Expulsión: la comisión", r: "Desde la Ley 21.809, antes de expulsar o cancelar la matrícula se necesita un informe de una comisión: profesor jefe, coordinador/a de convivencia educativa y un integrante del equipo técnico pedagógico. Si el director decide contra su recomendación, debe fundamentarlo en detalle.", s: [["dfl2_98", "art. 6 d"], ["l21809"]] },
+  { id: "f35", m: "proc", t: "Reconsideración de una expulsión", r: "Se pide dentro de 15 días desde la notificación. Resuelve el director, previa consulta al Consejo de Profesores. La medida se informa a la Superintendencia dentro de 5 días hábiles.", s: [["dfl2_98", "art. 6 d"]] },
+  { id: "f36", m: "proc", t: "Conductas de Aula Segura", r: "Afectan gravemente la convivencia: agresiones de carácter sexual, agresiones físicas que produzcan lesiones, uso o porte de armas o artefactos incendiarios y actos contra la infraestructura esencial.", s: [["l21128"]] },
+  { id: "f37", m: "proc", t: "Medida cautelar", r: "La suspensión durante un procedimiento sancionatorio no es una sanción: resguarda a la comunidad mientras se investiga y se notifica por escrito.", s: [["dfl2_98", "art. 6 d"]] },
+  { id: "f38", m: "proc", t: "Revisión de mochilas (Ley 21.827)", r: "Solo si el reglamento interno la contempla, por personal autorizado, en un lugar privado y con al menos dos adultos, uno del equipo de convivencia. Prohibido pedir que se desnude o revisar su cuerpo o ropa.", s: [["l21827", "art. 16 J LGE"]] },
+  { id: "f39", m: "proc", t: "Si el estudiante no deja revisar", r: "Se avisa de inmediato al apoderado, que debe venir a revisar con el personal autorizado. Mientras tanto el estudiante espera supervisado fuera de la sala. Si se encuentra un objeto peligroso, se avisa a la familia y a Carabineros o PDI.", s: [["l21827", "art. 16 J LGE"]] },
+  { id: "f40", m: "proc", t: "Uniforme", r: "No usar uniforme no puede impedir que un estudiante entre a clases ni ser motivo para enviarlo a su casa (Decreto 215 de 2009).", s: [["d215"]] },
+
+  { id: "f41", m: "seg", t: "Seguro escolar", r: "Protege a los estudiantes desde que se matriculan, por accidentes durante actividades escolares y en el trayecto directo entre la casa y el establecimiento. La atención en salud pública es gratuita.", s: [["ds313"], ["seguro"]] },
+  { id: "f42", m: "seg", t: "Declaración de accidente escolar", r: "El establecimiento completa la Declaración Individual de Accidente Escolar para que el estudiante sea atendido con el seguro en un servicio de salud público.", s: [["seguro"]] },
+  { id: "f43", m: "seg", t: "Asistencia y promoción", r: "Para ser promovido se exige al menos 85% de asistencia. El director puede autorizar la promoción con menos asistencia por razones fundadas.", s: [["d67", "art. 10"]] },
+  { id: "f44", m: "seg", t: "Inasistencia grave", r: "Mineduc clasifica como inasistencia grave una asistencia de 85% o menos, y como inasistencia reiterada una entre 85% y 90%. Es una alerta temprana de deserción.", s: [["asist"]] },
+  { id: "f45", m: "seg", t: "Plan Integral de Seguridad Escolar (PISE)", r: "Plan de prevención y respuesta ante emergencias del establecimiento: zonas de seguridad, roles definidos y simulacros periódicos.", s: [["pise"]] },
+  { id: "f46", m: "seg", t: "Retiro de estudiantes", r: "Sigue el procedimiento del reglamento interno: entrega solo al apoderado o a un adulto autorizado, verifica identidad y deja registro de hora y motivo.", s: [["c482", "reglamento interno"]] },
+  { id: "f47", m: "seg", t: "Salidas pedagógicas", r: "El reglamento interno debe tener un protocolo de salidas pedagógicas y giras de estudio, con autorización de las familias y adultos responsables.", s: [["c482"]] }
+];
+
+const PREGUNTAS = [
+  { id: "p1", m: "rol", n: 1, q: "¿Cuál de estos registros de un incidente es el más adecuado?", o: ["«Juan es violento y siempre molesta a Pedro.»", "«10:15, patio central. Juan empujó a Pedro, quien cayó. Pedro dijo: “me empujó porque no le presté la pelota”.»", "«Hubo un problema en el recreo, ya se solucionó.»", "«Pedro provocó a Juan, así que Juan reaccionó.»"], c: 1, e: "Un buen registro describe hechos verificables, con hora, lugar y palabras textuales, sin juicios.", s: [["c482", "debido proceso"]] },
+  { id: "p2", m: "rol", n: 1, q: "En la Ley 19.464, ¿cómo se llama la función técnica complementaria a la labor educativa?", o: ["Docencia directiva", "Paradocencia", "Servicios auxiliares", "Función profesional"], c: 1, e: "La ley distingue funciones profesionales, de paradocencia y de servicios auxiliares. Muchos inspectores de patio cumplen paradocencia.", s: [["l19464", "art. 2"]] },
+  { id: "p3", m: "rol", n: 1, q: "¿Qué nivel de estudios exige la Ley 19.464 para la paradocencia?", o: ["Título universitario", "Licencia de enseñanza media y, si corresponde, título técnico", "Solo enseñanza básica", "No exige estudios"], c: 1, e: "Para paradocencia se exige licencia de enseñanza media y, cuando corresponda, un título de nivel técnico.", s: [["l19464", "art. 2"]] },
+  { id: "p4", m: "rol", n: 1, q: "Ves que un estudiante es hostigado por compañeros. Según la Ley 21.809, tú:", o: ["Solo intervienes si lo pide el apoderado", "Tienes el deber de reportarlo al equipo directivo o a quien indique el reglamento", "Esperas a que ocurra tres veces", "Lo comentas con el curso"], c: 1, e: "El personal tiene el deber de reportar los hechos que puedan ser acoso, violencia o discriminación.", s: [["l21809", "art. 16 E letra f LGE"]] },
+  { id: "p5", m: "rol", n: 2, q: "¿Qué crea la Ley 20.594?", o: ["El seguro escolar", "Inhabilidades para trabajar con menores para condenados por delitos sexuales contra ellos", "El cargo de inspector general", "La Superintendencia de Educación"], c: 1, e: "Crea inhabilidades y un registro que los empleadores pueden consultar antes de contratar a quien trabajará con niños.", s: [["l20594"]] },
+  { id: "p6", m: "rol", n: 2, q: "La Ley Karin (21.643) se aplica en un colegio a:", o: ["Solo estudiantes", "Solo apoderados", "Los trabajadores del establecimiento", "Solo directivos"], c: 2, e: "Trata el acoso laboral, el acoso sexual y la violencia en el trabajo.", s: [["l21643"]] },
+
+  { id: "p7", m: "norma", n: 1, q: "¿Desde cuándo rige la Ley 21.809 de convivencia educativa?", o: ["Desde 2011", "Desde el 1 de julio de 2026", "Desde 2018", "Aún no rige"], c: 1, e: "Se publicó el 1 de abril de 2026 y entró en vigencia el 1 de julio de 2026.", s: [["l21809"]] },
+  { id: "p8", m: "norma", n: 1, q: "¿Qué institución fiscaliza el cumplimiento de la normativa educacional?", o: ["Agencia de Calidad de la Educación", "Superintendencia de Educación", "JUNAEB", "Consejo Nacional de Educación"], c: 1, e: "La Superintendencia fiscaliza; la Agencia de Calidad evalúa y orienta.", s: [["l20529"]] },
+  { id: "p9", m: "norma", n: 1, q: "La Ley de Inclusión prohíbe expulsar a un estudiante por:", o: ["Agredir sexualmente a un compañero", "Su rendimiento académico", "Portar un arma", "Agredir a un docente con lesiones"], c: 1, e: "Ni el rendimiento ni la situación socioeconómica pueden fundar una expulsión.", s: [["l20845"], ["dfl2_98", "art. 6 d"]] },
+  { id: "p10", m: "norma", n: 2, q: "¿Qué pasó con la Circular 482 de la Superintendencia en 2026?", o: ["Fue derogada en enero", "Sigue vigente, porque se derogaron las circulares 781 y 782 que la iban a reemplazar", "Se transformó en ley", "Solo rige para jardines infantiles"], c: 1, e: "La Resolución Exenta 324 de abril de 2026 derogó las circulares 781 y 782 y mantuvo vigente la Circular 482.", s: [["c482"]] },
+  { id: "p11", m: "norma", n: 2, q: "¿Qué ley de 2026 permite revisar mochilas en los colegios?", o: ["Ley 21.128", "Ley 21.827 Escuelas Protegidas", "Ley 20.536", "Ley 21.430"], c: 1, e: "La Ley 21.827 lo permite si el reglamento interno lo contempla, con resguardos.", s: [["l21827"]] },
+  { id: "p12", m: "norma", n: 2, q: "Con la Ley 21.430, ¿a qué oficinas pueden acudir niños y niñas por orientación o ayuda?", o: ["Oficinas Locales de la Niñez", "Departamentos Provinciales", "Oficinas de Convivencia Comunal", "Juzgados de Policía Local"], c: 0, e: "La Ley 21.430 menciona las Oficinas Locales de la Niñez como lugar al que niños, niñas y adolescentes pueden acudir.", s: [["l21430", "art. 11"]] },
+
+  { id: "p13", m: "conv", n: 1, q: "¿Qué distingue al acoso escolar de un conflicto puntual?", o: ["Que ocurra en el patio", "Que la agresión u hostigamiento sea reiterado", "Que participen más de dos estudiantes", "Que haya garabatos"], c: 1, e: "La ley lo define como agresión u hostigamiento reiterado que provoca maltrato, humillación, temor o un clima hostil.", s: [["l21809", "art. 16 B LGE"]] },
+  { id: "p14", m: "conv", n: 1, q: "Un estudiante es humillado en el grupo de WhatsApp del curso, fuera del horario escolar. ¿Corresponde actuar al colegio?", o: ["No, pasó fuera del colegio", "Sí, el acoso puede ocurrir fuera del establecimiento y por medios tecnológicos", "Solo si se usó el wifi del colegio", "Solo si el apoderado lo pide por escrito"], c: 1, e: "La definición legal incluye el acoso fuera del establecimiento y por medios tecnológicos.", s: [["l21809", "art. 16 B LGE"]] },
+  { id: "p15", m: "conv", n: 1, q: "¿Quién lidera el equipo de convivencia según la Ley 21.809?", o: ["El inspector general", "El coordinador o coordinadora de convivencia educativa", "El presidente del centro de padres", "El sostenedor"], c: 1, e: "La ley crea la coordinación de convivencia educativa, que lidera el equipo.", s: [["l21809", "art. 16 H LGE"]] },
+  { id: "p16", m: "conv", n: 1, q: "Una apoderada pide juntar a su hijo, víctima de acoso, con sus agresores para que «se arreglen». ¿Qué principio legal lo desaconseja?", o: ["Gratuidad", "Evitar la revictimización", "Libertad de enseñanza", "Autonomía del sostenedor"], c: 1, e: "La Ley 21.809 exige procedimientos que eviten la revictimización.", s: [["l21809"]] },
+  { id: "p17", m: "conv", n: 2, q: "La violencia contra un estudiante es especialmente grave cuando la comete:", o: ["Un compañero de curso", "Quien tiene una posición de autoridad, como un docente o asistente", "Un estudiante mayor de 14 años", "Un exalumno"], c: 1, e: "La ley la considera especialmente grave si la comete quien detenta una posición de autoridad.", s: [["l21809", "art. 16 B LGE"]] },
+  { id: "p18", m: "conv", n: 2, q: "Un apoderado insulta y empuja a un inspector en la entrada. Según la normativa de 2026:", o: ["Es un asunto privado entre ellos", "Es violencia laboral y el reglamento puede restringir el ingreso de ese apoderado", "Solo se anota en la hoja de vida del estudiante", "Se sanciona al estudiante"], c: 1, e: "La Ley 21.809 la trata como violencia laboral y la Ley 21.827 permite suspender el ingreso de apoderados agresores.", s: [["l21809"], ["l21827", "art. 7"]] },
+
+  { id: "p19", m: "prot", n: 1, q: "Una estudiante te cuenta que un familiar la toca. ¿Qué haces primero?", o: ["Le pides todos los detalles para tener pruebas", "La escuchas con calma, sin interrogarla, y no le prometes guardar el secreto", "Llamas a su familia para confirmar", "Le pides que lo hablen otro día"], c: 1, e: "Se acoge sin interrogar, para no revictimizar, y sin prometer secreto, porque hay obligación de denunciar.", s: [["l21057", "art. 1"], ["cpp", "art. 175"]] },
+  { id: "p20", m: "prot", n: 1, q: "¿En qué plazo deben denunciar los funcionarios obligados un delito que afecte a un estudiante?", o: ["48 horas", "24 horas", "5 días hábiles", "Cuando tengan pruebas"], c: 1, e: "El art. 176 del Código Procesal Penal fija 24 horas desde que se conoce el hecho.", s: [["cpp", "art. 176"]] },
+  { id: "p21", m: "prot", n: 1, q: "¿Quiénes están obligados a denunciar según el art. 175 letra e del Código Procesal Penal?", o: ["Solo el director", "Directores, inspectores y profesores", "Solo el coordinador de convivencia", "Solo los apoderados"], c: 1, e: "La norma nombra a «los directores, inspectores y profesores de establecimientos educacionales de todo nivel».", s: [["cpp", "art. 175 letra e"]] },
+  { id: "p22", m: "prot", n: 1, q: "Un estudiante muestra una imagen íntima de una compañera menor de edad. ¿Qué haces con el archivo?", o: ["Lo reenvías a tu celular como evidencia", "No lo copias ni reenvías; resguardas el equipo e informas para denunciar", "Lo borras y cierras el tema", "Lo muestras al curso para prevenir"], c: 1, e: "Almacenar o difundir ese material es delito. Se resguarda y se denuncia.", s: [["cp", "art. 374 bis"]] },
+  { id: "p23", m: "prot", n: 2, q: "¿Cuál es el objetivo de la Ley 21.057?", o: ["Grabar las clases", "Prevenir la victimización secundaria de niños, niñas y adolescentes", "Fiscalizar docentes", "Registrar reuniones de apoderados"], c: 1, e: "Regula entrevistas videograbadas para evitar la exposición reiterada del niño o niña.", s: [["l21057", "art. 1"]] },
+  { id: "p24", m: "prot", n: 2, q: "Un estudiante le vende marihuana a compañeros. Esto es:", o: ["Solo una falta leve", "Un posible delito de microtráfico que debe denunciarse, además de aplicar el reglamento", "Solo un tema de salud", "Algo para conversar solo con el apoderado"], c: 1, e: "Entregar pequeñas cantidades a otro para su consumo está sancionado en el art. 4 de la Ley 20.000.", s: [["l20000", "art. 4"], ["cpp", "art. 175"]] },
+  { id: "p25", m: "prot", n: 1, q: "Una estudiante embarazada teme tener que irse del liceo. Le explicas que:", o: ["Deberá cambiarse de establecimiento", "El embarazo no impide permanecer en el establecimiento y debe recibir facilidades académicas", "Debe pasar a jornada vespertina", "Solo puede venir hasta el quinto mes"], c: 1, e: "La LGE establece que el embarazo y la maternidad no son impedimento para ingresar y permanecer.", s: [["lge", "art. 11"]] },
+
+  { id: "p26", m: "proc", n: 1, q: "¿Cuál es la duración máxima de una suspensión?", o: ["3 días hábiles", "5 días hábiles, prorrogable excepcionalmente una vez", "10 días hábiles", "Un mes"], c: 1, e: "Así lo establece la Circular 482, vigente en 2026.", s: [["c482"]] },
+  { id: "p27", m: "proc", n: 1, q: "¿Cuál de estos NO es parte del debido proceso?", o: ["Ser escuchado", "Presunción de inocencia", "Sancionar antes de escuchar para dar una señal", "Pedir reconsideración"], c: 2, e: "Se escucha antes de resolver y la decisión debe ser fundada.", s: [["dfl2_98", "art. 6 d"], ["c482"]] },
+  { id: "p28", m: "proc", n: 1, q: "Un estudiante llega sin uniforme. ¿Qué no se puede hacer?", o: ["Registrar la situación", "Conversar con el apoderado", "Impedirle entrar a clases", "Recordarle la norma"], c: 2, e: "El Decreto 215 de 2009 no permite impedir el ingreso a clases por el uniforme.", s: [["d215"]] },
+  { id: "p29", m: "proc", n: 2, q: "Con suspensión cautelar (Aula Segura), ¿en qué plazo debe resolver el director?", o: ["5 días hábiles", "10 días hábiles", "15 días hábiles", "30 días corridos"], c: 1, e: "Hay un plazo máximo de 10 días hábiles desde la notificación de la medida.", s: [["l21128"], ["dfl2_98", "art. 6 d"]] },
+  { id: "p30", m: "proc", n: 2, q: "¿Quiénes integran la comisión que informa antes de una expulsión (Ley 21.809)?", o: ["Director, sostenedor y apoderado", "Profesor jefe, coordinador/a de convivencia educativa e integrante del equipo técnico pedagógico", "Centro de padres y centro de alumnos", "Superintendencia y Agencia"], c: 1, e: "El informe considera antecedentes conductuales, pedagógicos y psicosociales, proporcionalidad y alternativas formativas.", s: [["dfl2_98", "art. 6 d"], ["l21809"]] },
+  { id: "p31", m: "proc", n: 2, q: "¿En qué plazo se pide la reconsideración de una expulsión?", o: ["5 días", "15 días desde la notificación", "30 días", "No hay reconsideración"], c: 1, e: "Se pide al director, que resuelve previa consulta al Consejo de Profesores.", s: [["dfl2_98", "art. 6 d"]] },
+  { id: "p32", m: "proc", n: 2, q: "¿Cuál de estas conductas está en Aula Segura como afectación grave a la convivencia?", o: ["Usar el celular en clases", "Agresiones físicas que produzcan lesiones", "Atrasos reiterados", "No traer materiales"], c: 1, e: "También agresiones sexuales, armas o artefactos incendiarios y daños a la infraestructura esencial.", s: [["l21128"]] },
+  { id: "p33", m: "proc", n: 1, q: "En una revisión de mochila (Ley 21.827), ¿cuántos adultos deben estar presentes?", o: ["Uno", "Al menos dos, uno del equipo de convivencia", "Todo el consejo de profesores", "Ninguno, la hace el estudiante solo"], c: 1, e: "Además debe hacerse en un lugar privado y por personal autorizado.", s: [["l21827", "art. 16 J LGE"]] },
+  { id: "p34", m: "proc", n: 2, q: "Durante una revisión según la Ley 21.827, ¿qué está prohibido?", o: ["Pedir que muestre la mochila", "Pedir que vacíe sus bolsillos sin contacto físico", "Pedir que se desnude o revisar su cuerpo o ropa", "Informar al apoderado"], c: 2, e: "La ley prohíbe expresamente desnudar al estudiante y las revisiones corporales o de vestimenta.", s: [["l21827", "art. 16 J LGE"]] },
+
+  { id: "p35", m: "seg", n: 1, q: "¿Desde cuándo protege el seguro escolar a un estudiante?", o: ["Desde los 6 años", "Desde que se matricula", "Desde que paga una cuota", "Solo en horas de clases"], c: 1, e: "El seguro escolar cubre desde la matrícula.", s: [["ds313"], ["seguro"]] },
+  { id: "p36", m: "seg", n: 1, q: "Un estudiante se accidenta en su trayecto directo al colegio. ¿Lo cubre el seguro?", o: ["No, solo dentro del colegio", "Sí, cubre el trayecto directo de ida y regreso", "Solo en transporte escolar", "Solo si se declara en una hora"], c: 1, e: "El seguro incluye el trayecto directo entre la casa y el establecimiento.", s: [["ds313"], ["seguro"]] },
+  { id: "p37", m: "seg", n: 1, q: "¿Qué documento se completa para usar el seguro escolar?", o: ["Certificado de alumno regular", "Declaración Individual de Accidente Escolar", "Ficha de matrícula", "Licencia médica"], c: 1, e: "Se presenta en el servicio de salud público donde se atiende al estudiante.", s: [["seguro"]] },
+  { id: "p38", m: "seg", n: 1, q: "¿Qué asistencia mínima exige el Decreto 67 para la promoción?", o: ["75%", "80%", "85%", "90%"], c: 2, e: "El director puede autorizar excepciones por razones fundadas.", s: [["d67", "art. 10"]] },
+  { id: "p39", m: "seg", n: 2, q: "Según Mineduc, ¿qué asistencia se considera inasistencia grave?", o: ["95% o menos", "90% o menos", "85% o menos", "50% o menos"], c: 2, e: "Entre 85% y 90% es inasistencia reiterada; 85% o menos es grave.", s: [["asist"]] },
+  { id: "p40", m: "seg", n: 2, q: "¿Qué resolución de Mineduc regula el Plan Integral de Seguridad Escolar?", o: ["Res. Ex. 2515 de 2018", "Circular 482", "Decreto 67", "Ley 20.594"], c: 0, e: "El PISE organiza la prevención y la respuesta ante emergencias.", s: [["pise"]] },
+  { id: "p41", m: "seg", n: 1, q: "Al revisar una mochila aparece un cuchillo. Según la Ley 21.827, se avisa de inmediato a:", o: ["Nadie, se guarda el cuchillo", "La familia y Carabineros o PDI", "Solo al profesor jefe", "Al centro de alumnos"], c: 1, e: "El personal autorizado debe comunicarlo de inmediato a la familia y a las policías.", s: [["l21827", "art. 16 J LGE"]] }
+];
+
+const CASOS = [
+  { id: "c1", m: "seg", n: 1, titulo: "Pelea en el recreo",
+    intro: "En el recreo largo, dos estudiantes de 8° básico se golpean en el patio. Un círculo de compañeros graba con el celular. Uno de ellos sangra de la nariz.",
+    pasos: [
+      { q: "¿Qué haces primero?", o: [
+        { t: "Separo a los estudiantes, pido a otro adulto que disperse al grupo y atiendo al que sangra.", p: 2, f: "Primero se detiene la agresión y se protege la integridad de todos." },
+        { t: "Llevo a ambos a inspectoría y llamo a los apoderados para informarles la sanción.", p: 1, f: "Primero se atiende al lesionado. La sanción no se decide antes de escuchar a las partes." },
+        { t: "Tomo fotos de la escena como evidencia.", p: 0, f: "La evidencia no es la prioridad mientras sigue la agresión y hay un lesionado." } ] },
+      { q: "El estudiante sigue sangrando. ¿Cómo procedes?", o: [
+        { t: "Aplico el protocolo de accidentes: aviso al apoderado, completo la Declaración Individual de Accidente Escolar y, si es necesario, lo trasladamos a un servicio de salud público.", p: 2, f: "Así se activa el seguro escolar." },
+        { t: "Lo envío caminando a su casa para que lo vea su familia.", p: 0, f: "Un estudiante lesionado no se envía solo: lo retira su apoderado o se traslada según protocolo." },
+        { t: "Lo devuelvo a clases cuando deje de sangrar.", p: 0, f: "Sin aviso al apoderado ni registro no se activa el protocolo de accidentes." } ] },
+      { q: "Controlada la situación, ¿qué sigue?", o: [
+        { t: "Registro los hechos, reporto al equipo de convivencia y se escucha a ambos estudiantes antes de aplicar el reglamento.", p: 2, f: "Registro, reporte y debido proceso." },
+        { t: "Suspendo a ambos por 10 días para dar una señal.", p: 0, f: "La suspensión tiene un máximo de 5 días hábiles, prorrogable una vez, y requiere debido proceso." },
+        { t: "Pido a los compañeros que borren los videos y doy el tema por cerrado.", p: 1, f: "Frenar la difusión ayuda, pero el caso no se cierra sin registro ni reporte." } ] }
+    ],
+    claves: ["Primero detener la agresión y proteger.", "Activar protocolo de accidente y seguro escolar.", "Reportar al equipo de convivencia.", "Debido proceso y proporcionalidad."],
+    s: [["ds313"], ["seguro"], ["c482"], ["l21809", "art. 16 E letra f LGE"]] },
+  { id: "c2", m: "prot", n: 1, titulo: "Un relato en el patio",
+    intro: "Una estudiante de 5° básico se te acerca nerviosa: «mi tío me toca cuando mi mamá no está, pero no le digas a nadie».",
+    pasos: [
+      { q: "¿Cómo respondes?", o: [
+        { t: "La escucho con calma, le digo que hizo bien en contarlo y que debo avisar a personas que la pueden proteger.", p: 2, f: "Acoger, validar y no prometer secreto." },
+        { t: "Le pregunto desde cuándo pasa, dónde la toca y cuántas veces.", p: 0, f: "No se interroga: eso revictimiza y puede afectar la investigación." },
+        { t: "Le prometo que no se lo diré a nadie.", p: 0, f: "No puedes prometer secreto: tienes obligación de denunciar." } ] },
+      { q: "¿Qué haces después?", o: [
+        { t: "Informo de inmediato al equipo directivo para activar el protocolo y denunciar dentro de 24 horas.", p: 2, f: "La denuncia es obligatoria y tiene plazo de 24 horas." },
+        { t: "Llamo a la mamá para que ella decida.", p: 0, f: "Avisar a la familia no reemplaza la denuncia, y el agresor puede ser cercano a ella." },
+        { t: "Espero unos días para ver si hay más señales.", p: 0, f: "No se espera a tener pruebas para activar el protocolo." } ] },
+      { q: "¿Cómo dejas constancia?", o: [
+        { t: "Escribo sus palabras textuales, fecha, hora y contexto, sin interpretaciones.", p: 2, f: "El registro textual es la mejor base para la investigación." },
+        { t: "Escribo mi opinión sobre lo que pasa en esa casa.", p: 0, f: "El registro no lleva opiniones." },
+        { t: "No escribo nada para proteger su privacidad.", p: 0, f: "El registro es necesario y se resguarda con confidencialidad." } ] }
+    ],
+    claves: ["Escuchar sin interrogar.", "No prometer secreto.", "Informar de inmediato y denunciar en 24 horas.", "Registrar sus palabras textuales."],
+    s: [["cpp", "arts. 175 y 176"], ["l21057", "art. 1"]] },
+  { id: "c3", m: "conv", n: 1, titulo: "Memes en el grupo del curso",
+    intro: "La apoderada de un estudiante de 7° básico cuenta que hace semanas circulan memes que se burlan de su hijo en el WhatsApp del curso. Ahora él no quiere venir al colegio.",
+    pasos: [
+      { q: "¿Qué le respondes?", o: [
+        { t: "La escucho, registro su relato y lo reporto al equipo de convivencia para activar el protocolo de acoso.", p: 2, f: "El acoso por medios tecnológicos fuera del colegio también corresponde al establecimiento." },
+        { t: "Le explico que lo que pasa en WhatsApp fuera del horario no es responsabilidad del colegio.", p: 0, f: "La ley incluye el acoso fuera del establecimiento y por medios tecnológicos." },
+        { t: "Le sugiero que su hijo salga del grupo.", p: 1, f: "Puede ser un consejo de autocuidado, pero no reemplaza el protocolo." } ] },
+      { q: "¿Cómo se reúne la evidencia?", o: [
+        { t: "Pido capturas a la apoderada y las adjunto al registro oficial del caso.", p: 2, f: "Correcto, siempre que no contengan material sexual de menores." },
+        { t: "Pido que me las reenvíen a mi celular personal.", p: 1, f: "La evidencia va por canales institucionales, no a tu teléfono." },
+        { t: "Reviso los celulares de todo el curso.", p: 0, f: "Una revisión masiva de celulares no corresponde." } ] },
+      { q: "La apoderada pide juntar a su hijo con los autores para que se arreglen. ¿Qué le dices?", o: [
+        { t: "Le explico que en un caso de acoso no se enfrenta a la víctima con sus agresores; el protocolo contempla otras medidas.", p: 2, f: "La ley pide evitar la revictimización." },
+        { t: "Acepto y organizo la reunión para mañana.", p: 0, f: "Puede exponer más a la víctima." },
+        { t: "Le digo que eso lo decide el profesor jefe.", p: 1, f: "El profesor jefe participa, pero el protocolo lo lidera el equipo de convivencia." } ] }
+    ],
+    claves: ["El ciberacoso fuera del colegio también se aborda.", "Evidencia por canales institucionales.", "Evitar la revictimización.", "Reportar al equipo de convivencia."],
+    s: [["l21809", "arts. 16 B y 16 E LGE"]] },
+  { id: "c4", m: "seg", n: 1, titulo: "Un retiro que no cuadra",
+    intro: "A las 11:00 llega un hombre que dice ser el papá de un estudiante de 2° básico y quiere retirarlo por una emergencia. No figura como adulto autorizado. El niño, al verlo, parece asustado.",
+    pasos: [
+      { q: "¿Qué haces?", o: [
+        { t: "Le explico con amabilidad que no puedo entregarlo porque no está autorizado y llamo al apoderado registrado.", p: 2, f: "Se sigue el procedimiento de retiro del reglamento interno." },
+        { t: "Le pido el carnet y, si tiene el mismo apellido, lo entrego.", p: 0, f: "El apellido no acredita autorización. Puede haber medidas cautelares." },
+        { t: "Le pregunto al niño si se quiere ir con él.", p: 0, f: "La decisión no puede recaer en el niño, menos si está asustado." } ] },
+      { q: "El hombre levanta la voz e intenta entrar al patio. ¿Cómo sigues?", o: [
+        { t: "Llevo al niño a un lugar seguro con otro adulto, aviso a dirección y, si hay riesgo, llamo a Carabineros.", p: 2, f: "Primero la protección del estudiante." },
+        { t: "Lo enfrento físicamente.", p: 0, f: "No te expongas: protege al niño y pide apoyo." },
+        { t: "Lo entrego para evitar un escándalo.", p: 0, f: "Nunca se entrega a un estudiante bajo presión." } ] }
+    ],
+    claves: ["Solo retiran adultos autorizados.", "Verificar con el apoderado registrado.", "Ante riesgo, proteger y pedir apoyo.", "Registrar el incidente."],
+    s: [["c482", "reglamento interno"]] },
+  { id: "c5", m: "proc", n: 1, titulo: "Atrasos de la semana",
+    intro: "Un estudiante de 1° medio llega atrasado por tercera vez en la semana, a las 8:40. Se ve cansado.",
+    pasos: [
+      { q: "¿Qué haces ahora?", o: [
+        { t: "Registro el atraso, lo dejo entrar a clases y converso brevemente con él.", p: 2, f: "Se registra sin dejarlo fuera y se indaga la causa." },
+        { t: "Lo dejo esperando fuera del colegio hasta el segundo bloque.", p: 0, f: "Un estudiante no puede quedar fuera ni sin supervisión." },
+        { t: "Lo mando a la biblioteca toda la mañana.", p: 1, f: "Queda supervisado, pero pierde clases y no se aborda la causa." } ] },
+      { q: "Te cuenta que lleva a su hermana al jardín porque su mamá trabaja de noche. ¿Qué haces?", o: [
+        { t: "Contacto al apoderado para buscar acuerdos y reporto al equipo de convivencia u orientación por si necesita apoyo.", p: 2, f: "El atraso es síntoma de una situación familiar que requiere apoyo." },
+        { t: "Aplico la suspensión que toca al tercer atraso.", p: 0, f: "La ley privilegia medidas formativas y proporcionales." },
+        { t: "Le digo que se organice mejor.", p: 0, f: "Ignora el contexto y no ofrece apoyo." } ] }
+    ],
+    claves: ["Registrar sin dejar fuera.", "Indagar la causa.", "Atrasos e inasistencias son alertas tempranas.", "Medidas formativas y proporcionales."],
+    s: [["l21809"], ["asist"]] },
+  { id: "c6", m: "proc", n: 2, titulo: "Un cuchillo en la sala",
+    intro: "Una docente avisa que un estudiante de 2° medio mostró un cuchillo en clases. Al llegar, lo tiene en la mochila y está agitado.",
+    pasos: [
+      { q: "¿Cómo intervienes?", o: [
+        { t: "Mantengo la calma, saco al curso con la docente, le hablo sin confrontarlo y pido apoyo a dirección.", p: 2, f: "Primero la seguridad de todos y bajar la tensión." },
+        { t: "Le quito la mochila por la fuerza.", p: 0, f: "Forcejear con alguien armado pone a todos en riesgo." },
+        { t: "Espero a que termine la clase.", p: 0, f: "Un arma en la sala exige actuar de inmediato." } ] },
+      { q: "El estudiante entrega el cuchillo. ¿A quién se avisa?", o: [
+        { t: "De inmediato a su familia y a Carabineros o PDI, como exige la Ley 21.827.", p: 2, f: "Ante objetos peligrosos se avisa a la familia y a las policías." },
+        { t: "Solo al profesor jefe.", p: 0, f: "La ley exige aviso inmediato a la familia y a las policías." },
+        { t: "A nadie; se le devuelve al final del día.", p: 0, f: "Nunca se devuelve un arma." } ] },
+      { q: "¿Qué procedimiento disciplinario corresponde?", o: [
+        { t: "El director puede iniciar un procedimiento por Aula Segura y suspender como medida cautelar, notificando por escrito; tiene 10 días hábiles para resolver y hay 5 días para pedir reconsideración.", p: 2, f: "El porte de armas está en la Ley 21.128." },
+        { t: "Se le expulsa ese mismo día, sin más trámite.", p: 0, f: "Siempre hay procedimiento, notificación y reconsideración. Para expulsar se requiere además el informe de la comisión." },
+        { t: "Solo se conversa con el apoderado.", p: 0, f: "Es una conducta que afecta gravemente la convivencia." } ] }
+    ],
+    claves: ["Seguridad primero, sin confrontar.", "Objeto peligroso: aviso a familia y policías.", "Aula Segura: cautelar y 10 días hábiles.", "Reconsideración en 5 días."],
+    s: [["l21128"], ["l21827", "art. 16 J LGE"], ["dfl2_98", "art. 6 d"]] },
+  { id: "c7", m: "conv", n: 2, titulo: "Denuncia contra un colega",
+    intro: "Un apoderado cuenta que un profesor insultó y le gritó a su hijo de 4° básico frente al curso. Conoces al profesor y te parece tranquilo.",
+    pasos: [
+      { q: "¿Cómo reaccionas?", o: [
+        { t: "Acojo al apoderado, registro su relato y lo reporto al equipo directivo para activar el protocolo.", p: 2, f: "La violencia de quien tiene autoridad sobre un estudiante es especialmente grave." },
+        { t: "Le digo que seguro fue un malentendido.", p: 0, f: "Defender al colega de antemano invalida el relato." },
+        { t: "Le pido que lo hable con el profesor.", p: 0, f: "No se traslada al apoderado la responsabilidad del colegio." } ] },
+      { q: "¿Qué pasa mientras se investiga?", o: [
+        { t: "Medidas de resguardo para el estudiante y un procedimiento con debido proceso para ambos.", p: 2, f: "Protección del niño y garantías para el funcionario." },
+        { t: "Se despide al profesor de inmediato.", p: 0, f: "Eso prejuzga sin investigación." },
+        { t: "Nada hasta que termine la investigación.", p: 0, f: "El estudiante necesita resguardo desde el inicio." } ] }
+    ],
+    claves: ["Recibir y registrar sin defender a nadie.", "Violencia de adulto con autoridad: especialmente grave.", "Resguardo inmediato.", "Debido proceso para todos."],
+    s: [["l21809", "arts. 16 B y 16 E LGE"]] },
+  { id: "c8", m: "prot", n: 2, titulo: "Humo en el baño",
+    intro: "En el recreo encuentras a dos estudiantes de 3° medio fumando lo que parece marihuana en el baño.",
+    pasos: [
+      { q: "¿Qué haces en el momento?", o: [
+        { t: "Les pido que entreguen la sustancia, la resguardo con otro adulto presente, los acompaño a inspectoría e informo a dirección.", p: 2, f: "Se resguarda con testigo y se informa." },
+        { t: "Les reviso los bolsillos y la ropa.", p: 0, f: "La Ley 21.827 prohíbe revisar el cuerpo o la ropa. Como máximo se puede pedir que muestren sus bolsillos, sin contacto." },
+        { t: "Los dejo ir con una advertencia.", p: 0, f: "Debe activarse el protocolo de drogas y alcohol." } ] },
+      { q: "Uno dice que se la compró a otro estudiante. ¿Qué implica?", o: [
+        { t: "El consumo se aborda con apoyo y derivación, por ejemplo a SENDA Previene; la venta es un posible delito que dirección debe denunciar.", p: 2, f: "Consumo y microtráfico tienen respuestas distintas." },
+        { t: "Basta con una anotación negativa a todos.", p: 0, f: "La venta se denuncia y el consumo requiere apoyo." },
+        { t: "Interrogo al vendedor hasta que confiese.", p: 0, f: "La investigación penal no corresponde al inspector." } ] }
+    ],
+    claves: ["Resguardar la sustancia con testigo.", "Sin revisiones corporales.", "Consumo: apoyo y derivación.", "Venta: denuncia."],
+    s: [["l20000", "art. 4"], ["l21827", "art. 16 J LGE"], ["senda"], ["c482"]] },
+  { id: "c9", m: "proc", n: 2, titulo: "Revisión de mochilas",
+    intro: "El reglamento interno de tu liceo ya incorpora la revisión de mochilas de la Ley 21.827. Llega un aviso de que un estudiante de 1° medio trae algo peligroso.",
+    pasos: [
+      { q: "¿Cómo organizas la revisión?", o: [
+        { t: "En un lugar privado, con al menos dos adultos autorizados, uno del equipo de convivencia, pidiéndole que muestre la mochila.", p: 2, f: "Así lo exige la ley." },
+        { t: "En la sala, frente al curso, para que sirva de ejemplo.", p: 0, f: "Debe hacerse en un lugar privado, respetando su honra." },
+        { t: "La hago yo solo para ser discreto.", p: 0, f: "Se requieren al menos dos adultos." } ] },
+      { q: "El estudiante se niega a mostrar la mochila. ¿Qué haces?", o: [
+        { t: "Aviso de inmediato al apoderado para que venga, y mientras tanto el estudiante espera supervisado fuera de la sala.", p: 2, f: "La revisión no se fuerza." },
+        { t: "Se la quito a la fuerza.", p: 0, f: "La ley no permite forzar la revisión." },
+        { t: "Lo mando de vuelta a clases con la mochila.", p: 0, f: "Debe esperar supervisado fuera de la sala hasta que llegue el apoderado." } ] }
+    ],
+    claves: ["Solo si el reglamento la contempla.", "Lugar privado y dos adultos, uno de convivencia.", "Nunca desnudar ni revisar el cuerpo.", "Si se niega: apoderado y supervisión."],
+    s: [["l21827", "art. 16 J LGE"]] }
+];
+
+</script>
+<script>
+(() => {
+  // ---------- utilidades ----------
+  const KEY = "libro-inspector-v2";
+  const $ = s => document.querySelector(s);
+  const app = $("#app");
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const today = () => new Date().toLocaleDateString("sv-SE", { timeZone: "America/Santiago" });
+  const addDays = (d, n) => { const t = new Date(d + "T12:00:00Z"); t.setUTCDate(t.getUTCDate() + n); return t.toISOString().slice(0, 10); };
+  const shuffle = (a, rnd = Math.random) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const seeded = str => { let h = 1779033703 ^ str.length; for (let i = 0; i < str.length; i++) { h = Math.imul(h ^ str.charCodeAt(i), 3432918353); h = h << 13 | h >>> 19; } return () => { h = Math.imul(h ^ h >>> 16, 2246822507); h = Math.imul(h ^ h >>> 13, 3266489909); h ^= h >>> 16; return (h >>> 0) / 4294967296; }; };
+  const LETTERS = "ABCD";
+  const modName = id => (MODULOS.find(m => m.id === id) || {}).nombre || "Todos los módulos";
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const DIAS = ["D", "L", "M", "M", "J", "V", "S"];
+  const ICON = {
+    star: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.6 7 .7-5.3 4.8 1.6 7L12 17.5 5.7 21l1.6-7L2 9.3l7-.7z"/></svg>',
+    fire: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1 3.5-1.5 5-1.5 7.5 0 1.4 1 2.5 2.3 2.5 1.6 0 2.4-1.3 2.2-3.2C17.6 10.6 19 13 19 15.5 19 19.6 15.9 22 12 22s-7-2.4-7-6.3C5 10.4 10.8 7.7 12 2Z"/></svg>',
+    bolt: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg>',
+    book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/></svg>',
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>',
+    x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+    cards: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/></svg>',
+    q: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14"/><path d="M12 17.5h.01"/></svg>',
+    chat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg>',
+    shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/></svg>',
+    medal: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2h4l1 4 1-4h4l-3 7a6 6 0 1 1-4 0zm5 9a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/></svg>'
+  };
+
+  // ---------- estado ----------
+  const fresh = () => ({ v: 2, mode: "formacion", goal: 30, xp: 0, days: {}, met: {}, ch: {}, cards: {}, q: {}, cases: {}, badges: {}, rounds: [], combo: 0, seenFuentes: false, welcomed: false });
+  let S = loadLocal();
+  function loadLocal() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (raw) return Object.assign(fresh(), JSON.parse(raw));
+      const old = localStorage.getItem("libro-inspector-v1"); // migrar v1
+      if (old) {
+        const o = JSON.parse(old), s = fresh();
+        s.mode = o.mode || s.mode;
+        Object.entries(o.fichas || {}).forEach(([id, v]) => { s.cards[id] = { b: v === "ok" ? 3 : 1, due: today() }; });
+        Object.entries(o.preguntas || {}).forEach(([id, v]) => { s.q[id] = { ok: v ? 1 : 0, bad: v ? 0 : 1, last: v }; });
+        Object.assign(s.cases, o.casos || {});
+        return s;
+      }
+    } catch (e) {}
+    return fresh();
+  }
+  const cloud = { state: "local", name: "", email: "", ref: null, timer: null };
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+    if (cloud.ref && cloud.state !== "readonly") {
+      clearTimeout(cloud.timer);
+      cloud.timer = setTimeout(pushCloud, 1200);
+    }
+  }
+  async function pushCloud() {
+    try {
+      await cloud.ref.set({ estado: JSON.stringify(S), xp: S.xp, actualizado: Date.now() });
+      if (cloud.state !== "synced") { cloud.state = "synced"; paintTop(); }
+    } catch (e) {
+      cloud.state = e && (e.code === "permission-denied") ? "readonly" : "error";
+      paintTop(); if (view === "perfil") render.perfil();
+    }
+  }
+  function merge(a, b) {
+    const base = (b.xp || 0) > (a.xp || 0) ? b : a, other = base === a ? b : a;
+    const out = Object.assign(fresh(), base);
+    ["days"].forEach(k => { out[k] = Object.assign({}, other[k]); Object.entries(base[k] || {}).forEach(([d, v]) => { out[k][d] = Math.max(v, out[k][d] || 0); }); });
+    ["met", "ch", "badges"].forEach(k => { out[k] = Object.assign({}, other[k] || {}, base[k] || {}); });
+    out.welcomed = a.welcomed || b.welcomed;
+    return out;
+  }
+  // Pega aquí el bloque firebaseConfig de tu proyecto (Configuración del proyecto > Tus apps > App web)
+  const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyAJ9pIMmBQ91A6RBTsLLXy091FgCx1TOHw",
+    authDomain: "libro-inspector.firebaseapp.com",
+    projectId: "libro-inspector",
+    storageBucket: "libro-inspector.firebasestorage.app",
+    messagingSenderId: "725943439371",
+    appId: "1:725943439371:web:b096e6c41b09464007770e"
+  };
+  const AUTH_ERR = {
+    "auth/invalid-email": "El correo no es válido.",
+    "auth/missing-password": "Escribe tu contraseña.",
+    "auth/weak-password": "La contraseña debe tener al menos 6 caracteres.",
+    "auth/email-already-in-use": "Ese correo ya tiene cuenta. Toca «Ya tengo cuenta» para entrar.",
+    "auth/invalid-credential": "Correo o contraseña incorrectos.",
+    "auth/wrong-password": "Correo o contraseña incorrectos.",
+    "auth/user-not-found": "No hay una cuenta con ese correo.",
+    "auth/too-many-requests": "Demasiados intentos. Espera unos minutos y vuelve a probar.",
+    "auth/network-request-failed": "Sin conexión a internet. Revisa tu señal y vuelve a intentar."
+  };
+  const L = { mode: "crear" };
+  function showLogin(msg) {
+    const box = $("#login"); box.hidden = false;
+    const crear = L.mode === "crear";
+    box.innerHTML = `<div class="login-in">
+      <span class="brand" style="font-size:1.4rem">Libro del Inspector</span>
+      <h2 style="font-size:1.5rem">${crear ? "Crea tu cuenta" : "Entra a tu cuenta"}</h2>
+      <p class="muted small">${crear ? "Con tu cuenta, tu racha y tu avance quedan guardados aunque cambies de celular." : "Usa el correo y la contraseña con que te registraste."}</p>
+      <form id="lf" class="stack" novalidate>
+        ${crear ? `<label class="fld" for="lname">Tu nombre<input id="lname" autocomplete="given-name" required></label>` : ""}
+        <label class="fld" for="lmail">Correo<input id="lmail" type="email" autocomplete="email" inputmode="email" required></label>
+        <label class="fld" for="lpass">Contraseña<input id="lpass" type="password" autocomplete="${crear ? "new-password" : "current-password"}" minlength="6" required></label>
+        <p class="lerr" id="lerr" role="alert">${msg ? esc(msg) : ""}</p>
+        <button class="btn primary block" id="lgo" type="submit">${crear ? "Crear cuenta" : "Entrar"}</button>
+      </form>
+      <button class="link" id="lswap">${crear ? "Ya tengo cuenta" : "Crear una cuenta nueva"}</button>
+      ${crear ? "" : `<button class="link" id="lforgot">Olvidé mi contraseña</button>`}
+      <button class="link muted" id="lguest" style="color:var(--muted)">Seguir sin cuenta (el avance queda solo en este celular)</button>
+    </div>`;
+    const err = m => { $("#lerr").textContent = m; };
+    $("#lswap").addEventListener("click", () => { L.mode = crear ? "entrar" : "crear"; showLogin(); });
+    $("#lguest").addEventListener("click", () => { S.guest = true; save(); hideLogin(); });
+    const fg = $("#lforgot");
+    if (fg) fg.addEventListener("click", async () => {
+      const mail = $("#lmail").value.trim();
+      if (!mail) return err("Escribe tu correo y vuelve a tocar «Olvidé mi contraseña».");
+      try { await cloud.auth.sendPasswordResetEmail(mail); err("Te enviamos un correo para crear una nueva contraseña."); } catch (e) { err(AUTH_ERR[e.code] || "No se pudo enviar el correo. Intenta de nuevo."); }
+    });
+    $("#lf").addEventListener("submit", async ev => {
+      ev.preventDefault();
+      const mail = $("#lmail").value.trim(), pass = $("#lpass").value, name = crear ? $("#lname").value.trim() : "";
+      if (crear && !name) return err("Escribe tu nombre.");
+      $("#lgo").disabled = true; err("");
+      try {
+        if (crear) { const cred = await cloud.auth.createUserWithEmailAndPassword(mail, pass); await cred.user.updateProfile({ displayName: name }); cloud.name = name; }
+        else await cloud.auth.signInWithEmailAndPassword(mail, pass);
+      } catch (e) { err(AUTH_ERR[e.code] || "No se pudo completar. Intenta de nuevo."); $("#lgo").disabled = false; }
+    });
+  }
+  function hideLogin() { $("#login").hidden = true; }
+  async function initCloud() {
+    if (!FIREBASE_CONFIG || !window.firebase) { cloud.state = "nohost"; paintTop(); return; }
+    cloud.state = "connecting"; paintTop();
+    try {
+      firebase.initializeApp(FIREBASE_CONFIG);
+      cloud.auth = firebase.auth();
+      const fs = firebase.firestore();
+      cloud.auth.onAuthStateChanged(async u => {
+        if (!u) {
+          cloud.ref = null; cloud.state = "signedout"; cloud.name = ""; cloud.email = "";
+          paintTop(); if (!S.guest) showLogin(); return;
+        }
+        cloud.email = u.email || ""; cloud.name = u.displayName || cloud.name || "";
+        cloud.ref = fs.collection("usuarios").doc(u.uid);
+        if (S.uid && S.uid !== u.uid) S = fresh();
+        try {
+          const snap = await cloud.ref.get();
+          if (snap.exists) { const remote = JSON.parse(snap.data().estado || "{}"); S = merge(S, remote); }
+        } catch (e) {}
+        S.uid = u.uid; S.guest = false; S.welcomed = S.welcomed || false;
+        cloud.state = "synced";
+        try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+        await pushCloud();
+        hideLogin(); paintTop(); render[view]();
+      });
+    } catch (e) { cloud.state = "error"; paintTop(); }
+  }
+  async function signOut() {
+    try { await cloud.auth.signOut(); } catch (e) {}
+    S = fresh(); try { localStorage.removeItem(KEY); } catch (e) {}
+    L.mode = "entrar"; paintTop(); go("inicio");
+  }
+
+  // ---------- puntos, niveles, rachas, logros ----------
+  const NIVELES = [
+    [0, "Postulante"], [80, "Inspector/a en práctica"], [220, "Paradocente"], [450, "Inspector/a de patio"],
+    [800, "Inspector/a de nivel"], [1300, "Referente de convivencia"], [2000, "Inspector/a general"], [3000, "Leyenda del patio"]
+  ];
+  function levelOf(xp) { let i = 0; NIVELES.forEach((l, k) => { if (xp >= l[0]) i = k; }); const next = NIVELES[i + 1]; return { i, name: NIVELES[i][1], from: NIVELES[i][0], to: next ? next[0] : null }; }
+  function streak() {
+    let d = today(), n = 0;
+    if (!S.met[d]) d = addDays(d, -1);
+    while (S.met[d]) { n++; d = addDays(d, -1); }
+    return n;
+  }
+  const LOGROS = [
+    { id: "primer", n: "Primer paso", d: "Termina tu primera ronda", ic: "star" },
+    { id: "desafio", n: "Desafío cumplido", d: "Completa un desafío del día", ic: "medal" },
+    { id: "racha3", n: "Tres al hilo", d: "Racha de 3 días", ic: "fire" },
+    { id: "racha7", n: "Semana completa", d: "Racha de 7 días", ic: "fire" },
+    { id: "racha30", n: "Mes de patio", d: "Racha de 30 días", ic: "fire" },
+    { id: "perfecta", n: "Ronda perfecta", d: "Todo correcto en una ronda", ic: "check" },
+    { id: "combo5", n: "Imparable", d: "5 respuestas correctas seguidas", ic: "bolt" },
+    { id: "fichas20", n: "Memoria de patio", d: "Domina 20 fichas", ic: "cards" },
+    { id: "casos", n: "Buen criterio", d: "Completa todos los casos", ic: "chat" },
+    { id: "fuentes", n: "Fuente en mano", d: "Revisa la biblioteca de fuentes", ic: "book" },
+    { id: "nivel4", n: "De patio", d: "Llega a Inspector/a de patio", ic: "shield" },
+    { id: "nivel7", n: "Inspección general", d: "Llega a Inspector/a general", ic: "shield" }
+  ];
+  function unlock(id) {
+    if (S.badges[id]) return;
+    S.badges[id] = today();
+    const l = LOGROS.find(x => x.id === id);
+    toast("Logro desbloqueado: " + l.n);
+  }
+  function checkBadges() {
+    const st = streak();
+    if (st >= 3) unlock("racha3"); if (st >= 7) unlock("racha7"); if (st >= 30) unlock("racha30");
+    if (mastered() >= 20) unlock("fichas20");
+    if (CASOS.every(c => S.cases[c.id] != null)) unlock("casos");
+    const lv = levelOf(S.xp).i; if (lv >= 3) unlock("nivel4"); if (lv >= 6) unlock("nivel7");
+  }
+  function addXP(n) {
+    if (n <= 0) return;
+    const before = levelOf(S.xp).i, d = today();
+    S.xp += n; S.days[d] = (S.days[d] || 0) + n;
+    if (!S.met[d] && S.days[d] >= S.goal) { S.met[d] = true; setTimeout(() => { toast("¡Meta del día cumplida! Racha: " + streak() + (streak() === 1 ? " día" : " días")); confetti(); }, 350); }
+    const after = levelOf(S.xp).i;
+    if (after > before) setTimeout(() => { toast("¡Subiste de nivel! Ahora eres " + NIVELES[after][1]); confetti(); }, 900);
+    checkBadges(); save(); paintTop();
+  }
+
+  // ---------- fichas: repaso espaciado (cajas de Leitner) ----------
+  const INTERVAL = [0, 1, 2, 4, 8, 16];
+  const mastered = () => FICHAS.filter(f => (S.cards[f.id] || {}).b >= 4).length;
+  const isDue = f => { const c = S.cards[f.id]; return !c || c.due <= today(); };
+
+  // ---------- interfaz común ----------
+  let toastTimer;
+  function toast(msg) {
+    document.querySelectorAll(".toast").forEach(t => t.remove());
+    const t = document.createElement("div"); t.className = "toast"; t.setAttribute("role", "status"); t.textContent = msg;
+    document.body.appendChild(t); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.remove(), 2800);
+  }
+  function confetti() {
+    if (reduced) return;
+    const c = $("#confetti"), ctx = c.getContext("2d"); c.hidden = false;
+    const W = c.width = innerWidth, H = c.height = innerHeight;
+    const cs = getComputedStyle(document.documentElement);
+    const cols = ["--gold", "--copper", "--primary", "--good"].map(v => cs.getPropertyValue(v).trim());
+    const ps = Array.from({ length: 90 }, () => ({ x: W / 2, y: H * 0.35, vx: (Math.random() - 0.5) * 12, vy: -Math.random() * 12 - 4, s: 5 + Math.random() * 6, r: Math.random() * 6, c: cols[Math.floor(Math.random() * cols.length)] }));
+    let f = 0;
+    (function tick() {
+      ctx.clearRect(0, 0, W, H);
+      ps.forEach(p => { p.x += p.vx; p.y += p.vy; p.vy += 0.35; p.r += 0.2; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c; ctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); ctx.restore(); });
+      if (++f < 110) requestAnimationFrame(tick); else { ctx.clearRect(0, 0, W, H); c.hidden = true; }
+    })();
+  }
+  function srcHtml(list, label = "Fuente") {
+    if (!list || !list.length) return "";
+    return `<div class="src"><span class="lab">${list.length > 1 ? label + "s" : label}</span>${list.map(([k, det]) => { const f = FUENTES[k]; return `<a href="${f.u}" target="_blank" rel="noopener">${esc(f.n)}${det ? ", " + esc(det) : ""}</a>`; }).join("")}</div>`;
+  }
+  function paintTop() {
+    const st = streak();
+    const ps = $("#pStreak"); ps.querySelector("span").textContent = st; ps.classList.toggle("off", !S.met[today()]);
+    $("#pXp b").textContent = S.xp;
+    const nm = cloud.name || cloud.email || "";
+    $("#pAvatar").textContent = nm ? nm.trim()[0].toUpperCase() : "?";
+  }
+
+  // ---------- navegación ----------
+  let view = "inicio";
+  const VIEWS = ["inicio", "fichas", "preguntas", "casos", "perfil", "fuentes"];
+  const render = {};
+  function go(v) {
+    view = VIEWS.includes(v) ? v : "inicio";
+    const tab = view === "fuentes" ? "perfil" : view;
+    document.querySelectorAll(".nav button").forEach(b => b.setAttribute("aria-current", b.dataset.view === tab ? "page" : "false"));
+    try { history.replaceState(null, "", "#" + view); } catch (e) {}
+    Q.list = null; C.cur = null;
+    render[view](); window.scrollTo(0, 0);
+  }
+  document.querySelectorAll(".nav button").forEach(b => b.addEventListener("click", () => go(b.dataset.view)));
+  $("#pAvatar").addEventListener("click", () => go("perfil"));
+  $("#pStreak").addEventListener("click", () => go("inicio"));
+
+  const pool = () => S.mode === "profesional" ? PREGUNTAS : PREGUNTAS.filter(p => p.n === 1);
+  const casePool = () => S.mode === "profesional" ? CASOS : CASOS.filter(c => c.n === 1);
+  function modPct(m) {
+    const f = FICHAS.filter(x => x.m === m), p = pool().filter(x => x.m === m);
+    const done = f.filter(x => (S.cards[x.id] || {}).b >= 4).length + p.filter(x => (S.q[x.id] || {}).last === true).length;
+    return Math.round(100 * done / Math.max(1, f.length + p.length));
+  }
+  function dailyQuestions(d = today()) { return shuffle(pool(), seeded("desafio-" + d + "-" + S.mode)).slice(0, 5); }
+  function dailyCard(d = today()) { return FICHAS[Math.floor(seeded("dato-" + d)() * FICHAS.length)]; }
+
+  // ---------- inicio ----------
+  render.inicio = () => {
+    const d = today(), xpToday = S.days[d] || 0, pct = Math.min(1, xpToday / S.goal);
+    const st = streak(), ch = S.ch[d], dato = dailyCard();
+    const due = FICHAS.filter(isDue).length;
+    const circ = 2 * Math.PI * 34;
+    const hello = cloud.name ? "Hola, " + esc(cloud.name.split(" ")[0]) : "Hola";
+    const week = Array.from({ length: 7 }, (_, i) => addDays(d, i - 6));
+    app.innerHTML = `
+      ${!S.welcomed ? `<section class="card" style="border:2px solid var(--primary)">
+        <p class="eyebrow">Bienvenida</p>
+        <h2 style="font-size:1.35rem">Estudia unos minutos al día para el trabajo de inspector/a</h2>
+        <p class="small muted">Elige tu nivel. Puedes cambiarlo cuando quieras en tu perfil.</p>
+        <div class="row"><button class="btn primary" data-mode="formacion">Estoy empezando</button><button class="btn" data-mode="profesional">Ya trabajo como inspector/a</button></div>
+      </section>` : ""}
+      <section class="hero">
+        <div class="stack" style="gap:6px">
+          <p>${hello}</p>
+          <h2>${S.met[d] ? "¡Meta del día lista!" : st ? "Mantén tu racha de " + st + (st === 1 ? " día" : " días") : "Empieza tu racha hoy"}</h2>
+          <p>${xpToday} de ${S.goal} puntos hoy</p>
+        </div>
+        <div class="ring" aria-label="Meta diaria ${Math.round(pct * 100)}%">
+          <svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="none" stroke="currentColor" stroke-opacity=".25" stroke-width="9"/><circle cx="40" cy="40" r="34" fill="none" stroke="var(--gold)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${circ * (1 - pct)}"/></svg>
+          <span class="lbl">${Math.round(pct * 100)}%<br>meta</span>
+        </div>
+      </section>
+      <section class="week" aria-label="Últimos 7 días">
+        ${week.map(w => { const wd = new Date(w + "T12:00:00Z").getUTCDay(); return `<div class="day ${S.met[w] ? "done" : ""} ${w === d ? "today" : ""}"><i>${S.met[w] ? ICON.check.replace('stroke-width="3"', 'stroke-width="3" width="16" height="16"') : ""}</i><b>${DIAS[wd]}</b></div>`; }).join("")}
+      </section>
+      <section class="challenge">
+        <div class="medal">${ICON.medal}</div>
+        <div class="stack" style="gap:4px">
+          <h3>Desafío del día</h3>
+          <p class="small">${ch ? `Lo completaste: ${ch.r} de ${ch.t}. Vuelve mañana por uno nuevo.` : "5 preguntas nuevas cada día. +30 puntos extra al terminarlo."}</p>
+        </div>
+        <button class="btn ${ch ? "" : "primary"}" id="goCh">${ch ? "Repetir" : "Jugar"}</button>
+      </section>
+      <section class="tiles">
+        <button class="tile" data-go="fichas"><span class="ic" style="background:var(--good-soft);color:var(--good)">${ICON.cards}</span><h3>Repasar fichas</h3><p>${due ? due + " para hoy" : "Al día"}</p></button>
+        <button class="tile" data-go="preguntas"><span class="ic" style="background:var(--surface-2);color:var(--primary)">${ICON.q}</span><h3>Preguntas</h3><p>Rondas por módulo</p></button>
+        <button class="tile" data-go="casos"><span class="ic" style="background:var(--copper-soft);color:var(--copper)">${ICON.chat}</span><h3>Casos</h3><p>Decide paso a paso</p></button>
+        <button class="tile" id="goQuick"><span class="ic" style="background:var(--gold-soft);color:var(--gold)">${ICON.bolt}</span><h3>Ronda rápida</h3><p>5 preguntas al azar</p></button>
+      </section>
+      <section class="card">
+        <p class="eyebrow">Dato del día · ${esc(modName(dato.m))}</p>
+        <h3 style="font-size:1.1rem">${esc(dato.t)}</h3>
+        <p>${esc(dato.r)}</p>
+        ${srcHtml(dato.s)}
+      </section>
+      <section class="stack">
+        <h2 style="font-size:1.15rem">Tu avance por módulo</h2>
+        <div class="modules">${MODULOS.map(m => { const p = modPct(m.id); return `<button class="mod" data-mod="${m.id}"><span class="mi">${m.icon}</span><div><h3>${m.nombre}</h3><div class="bar"><i style="width:${p}%"></i></div></div><span class="pct">${p}%</span></button>`; }).join("")}</div>
+      </section>`;
+    app.querySelectorAll("[data-mode]").forEach(b => b.addEventListener("click", () => { S.mode = b.dataset.mode; S.welcomed = true; save(); render.inicio(); }));
+    app.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => go(b.dataset.go)));
+    app.querySelectorAll("[data-mod]").forEach(b => b.addEventListener("click", () => { F.mod = b.dataset.mod; go("fichas"); }));
+    $("#goCh").addEventListener("click", () => startQuiz(dailyQuestions(), "desafio"));
+    $("#goQuick").addEventListener("click", () => startQuiz(shuffle(pool()).slice(0, 5), "rapida"));
+  };
+
+  // ---------- fichas ----------
+  const F = { mod: "all", modo: "hoy", deck: [], i: 0, done: 0 };
+  function buildDeck() {
+    let d = FICHAS.filter(f => F.mod === "all" || f.m === F.mod);
+    if (F.modo === "hoy") d = d.filter(isDue);
+    F.deck = d;
+    if (F.i >= F.deck.length) F.i = 0;
+  }
+  render.fichas = () => {
+    buildDeck();
+    const f = F.deck[F.i], c = f ? (S.cards[f.id] || { b: 0 }) : null;
+    app.innerHTML = `
+      <section class="stack">
+        <div class="row between"><h2 style="font-size:1.4rem">Fichas</h2><span class="small muted">${mastered()} de ${FICHAS.length} dominadas</span></div>
+        <div class="seg" role="group" aria-label="Qué fichas ver">
+          <button data-modo="hoy" aria-pressed="${F.modo === "hoy"}">Para hoy</button>
+          <button data-modo="todas" aria-pressed="${F.modo === "todas"}">Todas</button>
+        </div>
+        <div class="chips" role="group" aria-label="Módulo">
+          <button class="chip" data-mod="all" aria-pressed="${F.mod === "all"}">Todos</button>
+          ${MODULOS.map(m => `<button class="chip" data-mod="${m.id}" aria-pressed="${F.mod === m.id}">${m.nombre}</button>`).join("")}
+        </div>
+      </section>
+      ${f ? `
+      <section class="stack">
+        <div class="flash-wrap">
+          <button class="flash" id="flash" aria-label="Dar vuelta la ficha">
+            <div class="face front">
+              <div class="row between"><span class="eyebrow">${esc(modName(f.m))}</span><span class="box-dots" title="Nivel de dominio">${[1, 2, 3, 4, 5].map(k => `<i class="${c.b >= k ? "on" : ""}"></i>`).join("")}</span></div>
+              <h2>${esc(f.t)}</h2>
+              <span class="hint">Toca para ver la respuesta · ${F.i + 1} de ${F.deck.length}</span>
+            </div>
+            <div class="face back">
+              <span class="eyebrow" style="color:inherit;opacity:.8">${esc(modName(f.m))}</span>
+              <p class="ans">${esc(f.r)}</p>
+              ${srcHtml(f.s)}
+            </div>
+          </button>
+        </div>
+        <p class="small muted" id="flipHint">Primero intenta responder en tu mente. Luego da vuelta la ficha.</p>
+        <div class="row" id="rate" hidden style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <button class="btn" id="rep">Me costó</button>
+          <button class="btn good" id="ok">La sabía</button>
+        </div>
+      </section>` : `
+      <section class="card result">
+        <div class="big" style="color:var(--good)">${ICON.check.replace("<svg", '<svg width="64" height="64"')}</div>
+        <h2>¡Fichas al día!</h2>
+        <p class="muted">Las fichas vuelven cuando toca repasarlas: al día siguiente, a los 3 días, a la semana y así.</p>
+        <button class="btn" id="all">Ver todas igual</button>
+      </section>`}`;
+    app.querySelectorAll("[data-mod]").forEach(b => b.addEventListener("click", () => { F.mod = b.dataset.mod; F.i = 0; render.fichas(); }));
+    app.querySelectorAll("[data-modo]").forEach(b => b.addEventListener("click", () => { F.modo = b.dataset.modo; F.i = 0; render.fichas(); }));
+    const all = $("#all"); if (all) all.addEventListener("click", () => { F.modo = "todas"; render.fichas(); });
+    if (!f) return;
+    const flash = $("#flash");
+    flash.addEventListener("click", () => {
+      flash.classList.toggle("flipped");
+      if (flash.classList.contains("flipped")) { $("#rate").hidden = false; $("#rate").style.display = "grid"; $("#flipHint").hidden = true; }
+    });
+    const next = () => { if (F.modo === "todas") F.i = (F.i + 1) % F.deck.length; render.fichas(); };
+    $("#ok").addEventListener("click", () => {
+      const b = Math.min(5, (c.b || 0) + 1);
+      S.cards[f.id] = { b, due: addDays(today(), INTERVAL[b]) };
+      addXP(b >= 4 && (c.b || 0) < 4 ? 8 : 3); next();
+    });
+    $("#rep").addEventListener("click", () => {
+      S.cards[f.id] = { b: 1, due: today() };
+      if (F.modo === "hoy") { F.i = (F.i + 1) % Math.max(1, F.deck.length); }
+      addXP(1); next();
+    });
+  };
+
+  // ---------- preguntas ----------
+  const Q = { mod: "all", n: 10, list: null, kind: "", i: 0, picked: null, right: 0, combo: 0, best: 0, gained: 0, missed: [] };
+  function startQuiz(list, kind) {
+    if (!list.length) { toast("No hay preguntas con ese filtro"); return; }
+    Q.list = list.map(p => ({ ...p, order: shuffle([0, 1, 2, 3]) }));
+    Object.assign(Q, { kind, i: 0, picked: null, right: 0, combo: 0, best: 0, gained: 0, missed: [], saved: false });
+    runQuiz();
+  }
+  function runQuiz() {
+    if (Q.i >= Q.list.length) return quizEnd();
+    const p = Q.list[Q.i], answered = Q.picked !== null, ok = Q.picked === p.c;
+    app.innerHTML = `
+      <section class="runner-top">
+        <button class="x" id="quit" aria-label="Salir">${ICON.x}</button>
+        <div class="progress"><i style="width:${100 * (Q.i + (answered ? 1 : 0)) / Q.list.length}%"></i></div>
+        <span class="small muted" style="font-weight:800">${Q.i + 1}/${Q.list.length}</span>
+      </section>
+      <section class="stack" aria-live="polite">
+        <div class="row between"><span class="eyebrow">${Q.kind === "desafio" ? "Desafío del día · " : ""}${esc(modName(p.m))}</span><span class="level ${p.n === 2 ? "adv" : ""}">${p.n === 2 ? "Avanzada" : "Básica"}</span></div>
+        <h2 class="qtitle">${esc(p.q)}</h2>
+        <div class="opts">${p.order.map((oi, k) => {
+          let cls = ""; if (answered) cls = oi === p.c ? "is-good" : oi === Q.picked ? "is-bad" : "dim";
+          return `<button class="opt ${cls}" data-o="${oi}" ${answered ? "disabled" : ""}><span class="k">${LETTERS[k]}</span><span>${esc(p.o[oi])}</span></button>`;
+        }).join("")}</div>
+        ${answered ? `<div class="sheet ${ok ? "good" : "bad"}">
+          <div class="row between"><h3>${ok ? "¡Correcto!" : "Respuesta correcta: " + esc(p.o[p.c])}</h3>${ok && Q.combo >= 3 ? `<span class="combo">Racha x${Q.combo}</span>` : ""}</div>
+          <p>${esc(p.e)}</p>
+          ${srcHtml(p.s)}
+          <button class="btn ${ok ? "good" : "primary"} block" id="nextQ">${Q.i + 1 === Q.list.length ? "Ver resultado" : "Continuar"}</button>
+        </div>` : ""}
+      </section>`;
+    $("#quit").addEventListener("click", () => { Q.list = null; render[view](); });
+    app.querySelectorAll(".opt").forEach(b => b.addEventListener("click", () => {
+      Q.picked = +b.dataset.o;
+      const good = Q.picked === p.c, st = S.q[p.id] || { ok: 0, bad: 0 };
+      S.q[p.id] = { ok: st.ok + (good ? 1 : 0), bad: st.bad + (good ? 0 : 1), last: good };
+      if (good) {
+        Q.right++; Q.combo++; Q.best = Math.max(Q.best, Q.combo);
+        const g = 10 + (Q.combo >= 3 ? 5 : 0); Q.gained += g; addXP(g);
+        if (Q.combo >= 5) unlock("combo5");
+      } else { Q.combo = 0; Q.missed.push(p); save(); }
+      runQuiz();
+    }));
+    const n = $("#nextQ"); if (n) { n.addEventListener("click", () => { Q.i++; Q.picked = null; runQuiz(); window.scrollTo(0, 0); }); n.focus({ preventScroll: false }); }
+  }
+  function quizEnd() {
+    const t = Q.list.length, pct = Math.round(100 * Q.right / t);
+    if (!Q.saved) {
+      Q.saved = true;
+      S.rounds.push({ d: Date.now(), k: Q.kind, m: Q.kind === "practica" ? Q.mod : Q.kind, r: Q.right, t }); S.rounds = S.rounds.slice(-30);
+      unlock("primer");
+      if (Q.right === t && t >= 5) unlock("perfecta");
+      if (Q.kind === "desafio" && !S.ch[today()]) { S.ch[today()] = { r: Q.right, t }; Q.gained += 30; addXP(30); unlock("desafio"); }
+      save(); if (pct >= 80) confetti();
+    }
+    const msg = pct === 100 ? "¡Perfecto! Dominas estos temas." : pct >= 80 ? "¡Muy bien! Vas por buen camino." : pct >= 50 ? "Buen avance. Repasa las fichas de lo que fallaste." : "Sigue practicando: repasa las fichas y vuelve a intentarlo.";
+    app.innerHTML = `
+      <section class="card result">
+        <p class="eyebrow">${Q.kind === "desafio" ? "Desafío del día" : "Resultado"}</p>
+        <span class="big" style="color:var(--primary)">${Q.right}/${t}</span>
+        <h2 style="font-size:1.25rem">${msg}</h2>
+        <div class="gain"><span>+${Q.gained} puntos</span>${Q.best >= 3 ? `<span>Mejor racha: ${Q.best}</span>` : ""}<span>Racha de días: ${streak()}</span></div>
+        <div class="stack" style="width:100%">
+          ${Q.missed.length ? `<button class="btn primary block" id="redo">Repetir las ${Q.missed.length} que fallé</button>` : ""}
+          <button class="btn block" id="home">Volver al inicio</button>
+        </div>
+      </section>
+      ${Q.missed.length ? `<section class="card"><h2 style="font-size:1.1rem">Para repasar</h2><div class="missed stack">${Q.missed.map(p => `<div><b>${esc(p.q)}</b><span class="ans">${esc(p.o[p.c])}</span><span class="small muted">${esc(p.e)}</span>${srcHtml(p.s)}</div>`).join("")}</div></section>` : ""}`;
+    $("#home").addEventListener("click", () => go("inicio"));
+    const r = $("#redo"); if (r) r.addEventListener("click", () => startQuiz(Q.missed, "errores"));
+  }
+  render.preguntas = () => {
+    if (Q.list) return runQuiz();
+    const avail = pool().filter(p => Q.mod === "all" || p.m === Q.mod);
+    const wrong = pool().filter(p => (S.q[p.id] || {}).last === false);
+    const last = S.rounds.slice(-4).reverse();
+    const label = r => r.k === "desafio" ? "Desafío del día" : r.k === "rapida" ? "Ronda rápida" : r.k === "errores" ? "Repaso de errores" : modName(r.m);
+    app.innerHTML = `
+      <section class="stack">
+        <h2 style="font-size:1.4rem">Preguntas</h2>
+        <p class="muted small">${S.mode === "profesional" ? "Nivel profesional: básicas y avanzadas." : "Nivel inicial: preguntas básicas. Cambia a profesional en tu perfil para sumar las avanzadas."} Cada respuesta correcta da 10 puntos, y 15 si llevas 3 o más seguidas.</p>
+      </section>
+      <section class="card">
+        <p class="eyebrow">Módulo</p>
+        <div class="chips" role="group" aria-label="Módulo">
+          <button class="chip" data-mod="all" aria-pressed="${Q.mod === "all"}">Todos</button>
+          ${MODULOS.map(m => `<button class="chip" data-mod="${m.id}" aria-pressed="${Q.mod === m.id}">${m.nombre}</button>`).join("")}
+        </div>
+        <p class="eyebrow">Largo de la ronda</p>
+        <div class="seg" role="group" aria-label="Cantidad">${[5, 10, 20].map(n => `<button data-n="${n}" aria-pressed="${Q.n === n}">${n} preguntas</button>`).join("")}</div>
+        <p class="small muted">${avail.length} preguntas disponibles.</p>
+        <button class="btn primary block" id="go">Comenzar ronda</button>
+        ${wrong.length ? `<button class="btn block" id="wrong">Repasar mis ${wrong.length} errores</button>` : ""}
+      </section>
+      ${last.length ? `<section class="stack"><h2 style="font-size:1.05rem">Últimas rondas</h2><div class="modules">${last.map(r => `<div class="mod" style="grid-template-columns:1fr auto"><div><h3>${esc(label(r))}</h3><div class="bar"><i style="width:${100 * r.r / r.t}%"></i></div></div><span class="pct">${r.r}/${r.t}</span></div>`).join("")}</div></section>` : ""}`;
+    app.querySelectorAll("[data-mod]").forEach(b => b.addEventListener("click", () => { Q.mod = b.dataset.mod; render.preguntas(); }));
+    app.querySelectorAll("[data-n]").forEach(b => b.addEventListener("click", () => { Q.n = +b.dataset.n; render.preguntas(); }));
+    $("#go").addEventListener("click", () => startQuiz(shuffle(avail).slice(0, Q.n), "practica"));
+    const w = $("#wrong"); if (w) w.addEventListener("click", () => startQuiz(shuffle(wrong).slice(0, 20), "errores"));
+  };
+
+  // ---------- casos ----------
+  const C = { cur: null, step: 0, picks: [], order: [] };
+  render.casos = () => {
+    if (C.cur) return runCase();
+    const list = casePool();
+    app.innerHTML = `
+      <section class="stack">
+        <h2 style="font-size:1.4rem">Casos prácticos</h2>
+        <p class="muted small">Situaciones reales de colegios y liceos. Elige qué harías en cada paso. Ganas 15 puntos por cada decisión adecuada que mejores.${S.mode === "profesional" ? "" : " El nivel profesional suma casos avanzados."}</p>
+      </section>
+      <section class="cases">${list.map(c => { const best = S.cases[c.id]; const stars = best == null ? 0 : best >= 100 ? 3 : best >= 67 ? 2 : 1; return `
+        <button class="case" data-c="${c.id}">
+          <div class="row between"><span class="eyebrow">${esc(modName(c.m))}</span><span class="stars" aria-label="${stars} de 3 estrellas">${"★".repeat(stars)}<span style="color:var(--line)">${"★".repeat(3 - stars)}</span></span></div>
+          <h3>${esc(c.titulo)}</h3><p>${esc(c.intro)}</p>
+          <div class="row"><span class="level ${c.n === 2 ? "adv" : ""}">${c.n === 2 ? "Avanzado" : "Básico"}</span><span class="small muted">${c.pasos.length} decisiones</span></div>
+        </button>`; }).join("")}</section>`;
+    app.querySelectorAll("[data-c]").forEach(b => b.addEventListener("click", () => {
+      C.cur = CASOS.find(c => c.id === b.dataset.c); C.step = 0; C.picks = []; C.done = false;
+      C.order = C.cur.pasos.map(p => shuffle(p.o.map((_, i) => i)));
+      runCase(); window.scrollTo(0, 0);
+    }));
+  };
+  function runCase() {
+    const c = C.cur;
+    if (C.step >= c.pasos.length) return caseEnd();
+    const paso = c.pasos[C.step], pick = C.picks[C.step], answered = pick != null;
+    app.innerHTML = `
+      <section class="runner-top">
+        <button class="x" id="back" aria-label="Volver a los casos">${ICON.x}</button>
+        <div class="progress"><i style="width:${100 * (C.step + (answered ? 1 : 0)) / c.pasos.length}%"></i></div>
+        <span class="small muted" style="font-weight:800">${C.step + 1}/${c.pasos.length}</span>
+      </section>
+      <section class="stack" aria-live="polite">
+        <p class="eyebrow">Caso · ${esc(modName(c.m))}</p>
+        <h2 style="font-size:1.35rem">${esc(c.titulo)}</h2>
+        <div class="scenario">${esc(c.intro)}</div>
+        ${C.step > 0 ? `<div class="steplog">${C.picks.slice(0, C.step).map((pk, i) => `<div><span class="dot p${c.pasos[i].o[pk].p}"></span><span>${esc(c.pasos[i].o[pk].t)}</span></div>`).join("")}</div>` : ""}
+        <h3 style="font-size:1.15rem">${esc(paso.q)}</h3>
+        <div class="opts">${C.order[C.step].map((oi, k) => {
+          const o = paso.o[oi]; let cls = "";
+          if (answered) cls = oi === pick ? (o.p === 2 ? "is-good" : o.p === 1 ? "is-mid" : "is-bad") : (o.p === 2 ? "is-good" : "dim");
+          return `<button class="opt ${cls}" data-o="${oi}" ${answered ? "disabled" : ""}><span class="k">${LETTERS[k]}</span><span>${esc(o.t)}</span></button>`;
+        }).join("")}</div>
+        ${answered ? (() => { const o = paso.o[pick], k = ["bad", "mid", "good"][o.p]; return `<div class="sheet ${k}">
+          <h3>${["Decisión inadecuada", "Decisión incompleta", "¡Decisión adecuada!"][o.p]}</h3><p>${esc(o.f)}</p>
+          <button class="btn ${o.p === 2 ? "good" : "primary"} block" id="nextC">${C.step + 1 === c.pasos.length ? "Ver resumen" : "Siguiente decisión"}</button></div>`; })() : ""}
+      </section>`;
+    $("#back").addEventListener("click", () => { C.cur = null; render.casos(); });
+    app.querySelectorAll(".opt").forEach(b => b.addEventListener("click", () => { C.picks[C.step] = +b.dataset.o; runCase(); }));
+    const n = $("#nextC"); if (n) { n.addEventListener("click", () => { C.step++; runCase(); window.scrollTo(0, 0); }); n.focus({ preventScroll: false }); }
+  }
+  function caseEnd() {
+    const c = C.cur, pts = C.picks.reduce((s, pk, i) => s + c.pasos[i].o[pk].p, 0), max = c.pasos.length * 2;
+    const pct = Math.round(100 * pts / max);
+    if (!C.done) {
+      C.done = true;
+      const prev = S.cases[c.id], prevPts = prev == null ? 0 : Math.round(prev * max / 100);
+      const gain = Math.max(0, pts - prevPts) * 8 + (prev == null ? 10 : 0);
+      C.gain = gain;
+      if (prev == null || pct > prev) S.cases[c.id] = pct;
+      addXP(gain); unlock("primer"); checkBadges(); save();
+      if (pct === 100) confetti();
+    }
+    const stars = pct >= 100 ? 3 : pct >= 67 ? 2 : 1;
+    app.innerHTML = `
+      <section class="card result">
+        <p class="eyebrow">Resumen del caso</p>
+        <span class="stars" style="font-size:2.2rem">${"★".repeat(stars)}<span style="color:var(--line)">${"★".repeat(3 - stars)}</span></span>
+        <h2 style="font-size:1.3rem">${esc(c.titulo)}</h2>
+        <div class="gain"><span>${pts} de ${max} puntos de criterio</span><span>+${C.gain} puntos</span></div>
+      </section>
+      <section class="card">
+        <div class="steplog">${C.picks.map((pk, i) => `<div><span class="dot p${c.pasos[i].o[pk].p}"></span><span><b>${esc(c.pasos[i].q)}</b><br>${esc(c.pasos[i].o[pk].t)}</span></div>`).join("")}</div>
+        <h3 style="font-size:1.05rem">Puntos clave</h3>
+        <ul class="keys">${c.claves.map(k => `<li>${esc(k)}</li>`).join("")}</ul>
+        ${srcHtml(c.s)}
+      </section>
+      <div class="stack"><button class="btn primary block" id="retry">Intentar de nuevo</button><button class="btn block" id="list">Otros casos</button></div>`;
+    $("#retry").addEventListener("click", () => { C.step = 0; C.picks = []; C.done = false; C.order = c.pasos.map(p => shuffle(p.o.map((_, i) => i))); runCase(); });
+    $("#list").addEventListener("click", () => { C.cur = null; C.done = false; render.casos(); });
+  }
+
+  // ---------- perfil ----------
+  render.perfil = () => {
+    const lv = levelOf(S.xp), st = streak();
+    const prog = lv.to ? Math.round(100 * (S.xp - lv.from) / (lv.to - lv.from)) : 100;
+    const accState = {
+      synced: ["ok", "Tu avance se guarda en tu cuenta"],
+      connecting: ["warn", "Conectando con tu cuenta…"],
+      readonly: ["warn", "No se pudo guardar en tu cuenta"],
+      error: ["warn", "No se pudo guardar en tu cuenta; se guarda en este equipo"],
+      signedout: ["warn", "Sin sesión: tu avance se guarda solo en este equipo"],
+      nohost: ["warn", "Sin sesión: tu avance se guarda solo en este equipo"],
+      local: ["warn", "Tu avance se guarda en este equipo"]
+    }[cloud.state];
+    app.innerHTML = `
+      <section class="card">
+        <div class="account">
+          <span class="avatar">${esc((cloud.name || cloud.email || "?").trim()[0].toUpperCase())}</span>
+          <div style="min-width:0">
+            <h2 style="font-size:1.2rem">${cloud.name ? esc(cloud.name) : "Mi perfil"}</h2>
+            ${cloud.email ? `<p class="small muted" style="word-break:break-all">${esc(cloud.email)}</p>` : ""}
+            <span class="status ${accState[0]}">${accState[1]}</span>
+          </div>
+        </div>
+        
+        ${cloud.state === "signedout" ? `<button class="btn primary block" id="login1">Iniciar sesión o crear cuenta</button>` : ""}
+        ${cloud.state === "synced" ? `<button class="btn block" id="logout">Cerrar sesión</button>` : ""}
+      </section>
+      <section class="card">
+        <div class="row between"><div><p class="eyebrow">Nivel ${lv.i + 1}</p><h2 style="font-size:1.25rem">${lv.name}</h2></div><span class="pill xp">${ICON.bolt.replace("<svg", '<svg width="18" height="18"')}<b>${S.xp}</b></span></div>
+        <div class="bar xpbar" style="height:12px"><i style="width:${prog}%"></i></div>
+        <p class="small muted">${lv.to ? `${lv.to - S.xp} puntos para ${NIVELES[lv.i + 1][1]}` : "¡Llegaste al nivel máximo!"}</p>
+        <div class="row"><span class="pill fire">${ICON.fire.replace("<svg", '<svg width="18" height="18"')}${st} ${st === 1 ? "día" : "días"} de racha</span><span class="pill">${mastered()} fichas dominadas</span></div>
+      </section>
+      <section class="card">
+        <p class="eyebrow">Meta diaria</p>
+        <div class="seg" role="group" aria-label="Meta diaria">${[[20, "Suave · 20"], [30, "Normal · 30"], [50, "Intensa · 50"]].map(([g, l]) => `<button data-goal="${g}" aria-pressed="${S.goal === g}">${l}</button>`).join("")}</div>
+        <p class="small muted">Puntos por día para mantener la racha. Una ronda de 5 preguntas da unos 50.</p>
+        <p class="eyebrow">Nivel de estudio</p>
+        <div class="seg" role="group" aria-label="Nivel">
+          <button data-mode="formacion" aria-pressed="${S.mode === "formacion"}">Estoy empezando</button>
+          <button data-mode="profesional" aria-pressed="${S.mode === "profesional"}">Profesional</button>
+        </div>
+      </section>
+      <section class="stack">
+        <h2 style="font-size:1.15rem">Logros · ${Object.keys(S.badges).length} de ${LOGROS.length}</h2>
+        <div class="badges">${LOGROS.map(l => `<div class="badge ${S.badges[l.id] ? "on" : ""}" title="${esc(l.d)}"><span class="b">${ICON[l.ic]}</span><span>${l.n}</span><span class="muted" style="font-weight:600;font-size:0.68rem">${l.d}</span></div>`).join("")}</div>
+      </section>
+      <section class="card">
+        <h2 style="font-size:1.1rem">Fuentes oficiales</h2>
+        <p class="small muted">Todo el contenido cita leyes y documentos de BCN (Ley Chile), Mineduc, Superintendencia de Educación, ChileAtiende y SENDA. Revisado con la normativa vigente a octubre de 2026.</p>
+        <button class="btn block" id="fuentes">Ver las ${Object.keys(FUENTES).length} fuentes</button>
+      </section>
+      <div class="row small muted" style="justify-content:center"><button class="link" id="reset">Borrar mi avance</button><span id="resetConfirm" hidden>¿Seguro? <button class="link" id="resetYes">Sí, borrar</button> · <button class="link" id="resetNo">Cancelar</button></span></div>`;
+    app.querySelectorAll("[data-goal]").forEach(b => b.addEventListener("click", () => { S.goal = +b.dataset.goal; save(); render.perfil(); paintTop(); }));
+    app.querySelectorAll("[data-mode]").forEach(b => b.addEventListener("click", () => { S.mode = b.dataset.mode; S.welcomed = true; save(); render.perfil(); }));
+    $("#fuentes").addEventListener("click", () => go("fuentes"));
+    const li = $("#login1"); if (li) li.addEventListener("click", () => { L.mode = "entrar"; showLogin(); });
+    const lo = $("#logout"); if (lo) lo.addEventListener("click", signOut);
+    const rc = $("#resetConfirm");
+    $("#reset").addEventListener("click", () => { rc.hidden = false; });
+    $("#resetNo").addEventListener("click", () => { rc.hidden = true; });
+    $("#resetYes").addEventListener("click", () => { const keep = { mode: S.mode, goal: S.goal, welcomed: true }; S = Object.assign(fresh(), keep); save(); paintTop(); render.perfil(); toast("Avance borrado"); });
+  };
+  render.fuentes = () => {
+    unlock("fuentes"); save();
+    const uses = k => [...FICHAS, ...PREGUNTAS, ...CASOS].filter(x => (x.s || []).some(s => s[0] === k)).length;
+    app.innerHTML = `
+      <section class="runner-top"><button class="x" id="back" aria-label="Volver al perfil">${ICON.x}</button><h2 style="font-size:1.3rem">Fuentes oficiales</h2></section>
+      <p class="small muted">Cada ficha, pregunta y caso muestra su fuente. Estos son los documentos usados, con enlace al texto oficial.</p>
+      <section class="card">${Object.entries(FUENTES).map(([k, f]) => `<div class="srcitem"><a href="${f.u}" target="_blank" rel="noopener" style="font-weight:800">${esc(f.n)}</a><span class="small muted">${esc(f.org)} · citada en ${uses(k)} contenidos</span></div>`).join("")}</section>
+      <p class="note">Las leyes cambian. Ante una duda concreta, manda el reglamento interno de tu establecimiento y lo que diga la Superintendencia de Educación.</p>`;
+    $("#back").addEventListener("click", () => go("perfil"));
+  };
+
+  // ---------- inicio ----------
+  paintTop();
+  const start = (location.hash || "").replace("#", "");
+  go(start || "inicio");
+  initCloud();
+})();
+</script>
+
+</body>
+</html>
