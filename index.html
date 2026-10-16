@@ -132,6 +132,22 @@ main { max-width: 560px; margin: 0 auto; padding-inline: 16px; padding-block: 18
 .bar i { display: block; height: 100%; background: var(--good); border-radius: 99px; transition: width .4s; }
 .bar.xpbar i { background: var(--gold); }
 
+.mod .rk { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.mod .rk small { font-size: 0.7rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
+.seal { display: inline-flex; align-items: center; gap: 4px; background: var(--gold-soft); color: var(--ink); border: 1.5px solid var(--gold); border-radius: 99px; padding: 2px 8px; font-size: 0.72rem; font-weight: 800; }
+.seal svg { width: 13px; height: 13px; color: var(--gold); }
+.know { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center; }
+.know .ring .lbl { color: var(--ink); font-size: 1rem; }
+.ranks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-top: 6px; }
+.ranks span { font-size: 0.68rem; font-weight: 800; text-align: center; padding: 4px 0; border-radius: 8px; background: var(--surface-2); color: var(--muted); }
+.ranks span.on { background: var(--good); color: var(--surface); }
+.brk { display: grid; gap: 10px; }
+.brk > div { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; align-items: center; font-size: 0.92rem; }
+.brk .bar { grid-column: 1 / -1; margin-top: 0; }
+.evo { display: flex; align-items: flex-end; gap: 6px; height: 90px; padding-top: 6px; }
+.evo div { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; height: 100%; font-size: 0.66rem; font-weight: 800; color: var(--muted); }
+.evo i { display: block; width: 100%; max-width: 28px; background: var(--good); border-radius: 6px 6px 2px 2px; min-height: 3px; }
+
 .chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; margin-inline: -16px; padding-inline: 16px; }
 .chip { flex: none; border: 2px solid var(--line); background: var(--surface); padding: 6px 12px; border-radius: 99px; font-size: 0.85rem; font-weight: 800; color: var(--muted); }
 .chip[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
@@ -288,7 +304,16 @@ const FUENTES = {
   d215:    { n: "Decreto 215 de 2009 sobre uniforme escolar (nota de la Seremi de Aysén, 2026)", org: "Mineduc", u: "https://aysen.mineduc.cl/2026/02/26/atencion-apoderados-autoridades-recuerdan-la-normativa-respecto-a-utiles-textos-y-uniformes-de-cara-al-regreso-a-clases/" },
   c482:    { n: "Circular 482 sobre reglamentos internos (sigue vigente según Res. Ex. 324 de 2026)", org: "Superintendencia de Educación · Diario Oficial", u: "https://www.diariooficial.interior.gob.cl/publicaciones/2026/05/07/44443/01/2805316.pdf" },
   pise:    { n: "Resolución Exenta 2515 de 2018, Plan Integral de Seguridad Escolar", org: "BCN · Ley Chile", u: BCN(1119259) },
-  senda:   { n: "SENDA Previene en la Comunidad", org: "SENDA", u: "https://www.senda.gob.cl" }
+  senda:   { n: "SENDA Previene en la Comunidad", org: "SENDA", u: "https://www.senda.gob.cl" },
+  l21545:  { n: "Ley 21.545, Ley TEA: inclusión, atención integral y derechos de las personas con trastorno del espectro autista (2023)", org: "BCN · Ley Chile", u: BCN(1190123) },
+  c586:    { n: "Circular sobre párvulos y estudiantes con TEA, aprobada por Res. Ex. 586 de 2023 de la Superintendencia de Educación (texto íntegro en supereduc.cl)", org: "Diario Oficial", u: "https://www.diariooficial.interior.gob.cl/publicaciones/2024/01/04/43741/01/2431212.pdf" },
+  teamin:  { n: "Ley TEA: presentación general", org: "Mineduc · Ayuda Mineduc", u: "https://ayudamineduc.cl/sites/default/files/ley_tea_-_presentacion_general.pdf" },
+  dec:     { n: "Orientaciones para el protocolo de desregulación emocional y conductual (Seremi de Educación de Valparaíso)", org: "Mineduc", u: "https://valparaiso.mineduc.cl/wp-content/uploads/sites/8/2021/01/PROTOTIPO-PROTOCOLO-DE-DESREGULACIO%CC%81N.-propuesta-de-adptacion-Final.pdf" },
+  l20422:  { n: "Ley 20.422 sobre igualdad de oportunidades e inclusión social de personas con discapacidad", org: "BCN · Ley Chile", u: BCN(1010903) },
+  l20609:  { n: "Ley 20.609 que establece medidas contra la discriminación (Ley Zamudio)", org: "BCN · Ley Chile", u: BCN(1042092) },
+  d170:    { n: "Decreto 170 de 2009, alumnos con necesidades educativas especiales y subvención de educación especial", org: "BCN · Ley Chile", u: BCN(1012570) },
+  pie:     { n: "Manual de orientaciones del Programa de Integración Escolar (PIE)", org: "Mineduc · Educación Especial", u: "https://especial.mineduc.cl/wp-content/uploads/sites/31/2016/09/201405071255480.ManualOrientacionesPIE.pdf" },
+  copiapo: { n: "Sentencia de la Corte de Apelaciones de Copiapó, Rol 207-2024, sobre tutora sombra (publicada por la Facultad de Derecho de la Universidad de Chile)", org: "Poder Judicial", u: "https://derecho.uchile.cl/dam/jcr:7acfefd2-d45a-4c97-94d3-b97215ee19ff/Tutor%20en%20sala%20CA%20Copiap%C3%B3%20207-2024.pdf" }
 };
 
 const MODULOS = [
@@ -297,7 +322,9 @@ const MODULOS = [
   { id: "conv", nombre: "Convivencia educativa", icon: "C", desc: "Ley 21.809, acoso escolar, reglamento interno y equipo de convivencia." },
   { id: "prot", nombre: "Protocolos", icon: "P", desc: "Vulneración de derechos, abuso, drogas, ciberacoso y embarazo." },
   { id: "proc", nombre: "Medidas y debido proceso", icon: "M", desc: "Faltas, suspensión, Aula Segura, expulsión y Escuelas Protegidas." },
-  { id: "seg", nombre: "Seguridad y asistencia", icon: "S", desc: "Accidentes, seguro escolar, retiros, asistencia y emergencias." }
+  { id: "seg", nombre: "Seguridad y asistencia", icon: "S", desc: "Accidentes, seguro escolar, retiros, asistencia y emergencias." },
+  { id: "tea", nombre: "TEA y desregulación", icon: "T", desc: "Ley TEA, desregulación emocional y conductual, contención y familia." },
+  { id: "inc", nombre: "Inclusión y apoyos", icon: "I", desc: "NEE, PIE, tutor sombra, ajustes y no discriminación." }
 ];
 
 // s: [[fuente, detalle], ...]
@@ -353,7 +380,40 @@ const FICHAS = [
   { id: "f44", m: "seg", t: "Inasistencia grave", r: "Mineduc clasifica como inasistencia grave una asistencia de 85% o menos, y como inasistencia reiterada una entre 85% y 90%. Es una alerta temprana de deserción.", s: [["asist"]] },
   { id: "f45", m: "seg", t: "Plan Integral de Seguridad Escolar (PISE)", r: "Plan de prevención y respuesta ante emergencias del establecimiento: zonas de seguridad, roles definidos y simulacros periódicos.", s: [["pise"]] },
   { id: "f46", m: "seg", t: "Retiro de estudiantes", r: "Sigue el procedimiento del reglamento interno: entrega solo al apoderado o a un adulto autorizado, verifica identidad y deja registro de hora y motivo.", s: [["c482", "reglamento interno"]] },
-  { id: "f47", m: "seg", t: "Salidas pedagógicas", r: "El reglamento interno debe tener un protocolo de salidas pedagógicas y giras de estudio, con autorización de las familias y adultos responsables.", s: [["c482"]] }
+  { id: "f47", m: "seg", t: "Salidas pedagógicas", r: "El reglamento interno debe tener un protocolo de salidas pedagógicas y giras de estudio, con autorización de las familias y adultos responsables.", s: [["c482"]] },
+  { id: "f48", m: "tea", t: "¿Qué es el TEA según la ley chilena?", r: "La Ley 21.545 describe a las personas con trastorno del espectro autista como aquellas que presentan una diferencia o diversidad en el neurodesarrollo típico. Es una condición del neurodesarrollo y debe contar con un diagnóstico.", s: [["l21545", "art. 2"]] },
+  { id: "f49", m: "tea", t: "La Ley TEA en el colegio", r: "Los establecimientos deben dar acceso sin discriminación arbitraria, velar por comunidades educativas inclusivas y ajustar sus reglamentos para abordar las desregulaciones emocionales y conductuales. También deben ofrecer espacios sin violencia y formar a su personal.", s: [["l21545", "arts. 18 y 20"]] },
+  { id: "f50", m: "tea", t: "¿Qué es una desregulación emocional y conductual (DEC)?", r: "Una reacción motora y emocional ante uno o varios estímulos, en la que el estudiante no logra comprender ni expresar lo que siente y no puede calmarse sin ayuda. Más de un observador la percibe como «descontrol».", s: [["teamin"], ["dec"]] },
+  { id: "f51", m: "tea", t: "Señales previas de una DEC", r: "Aumento de movimientos repetitivos, irritabilidad, respiración agitada o voz más fuerte. Reconocer estas señales y actuar a tiempo, por ejemplo con una pausa acordada, puede evitar que la crisis escale.", s: [["dec", "prevención"]] },
+  { id: "f52", m: "tea", t: "La conducta también comunica", r: "Una desregulación puede ser la forma de comunicar una necesidad: atención, descanso, un estímulo sensorial o incluso dolor. Por eso conviene preguntar a la familia qué la desencadena, como falta de sueño o ruidos fuertes.", s: [["dec", "prevención"]] },
+  { id: "f53", m: "tea", t: "DEC etapa 1: inicio, sin riesgo", r: "Cambia la actividad, el material o el lugar. Ofrece un espacio tranquilo y objetos conocidos, habla con voz calmada y da más de una alternativa para elegir.", s: [["dec", "etapa 1"]] },
+  { id: "f54", m: "tea", t: "DEC etapa 2: aumento, con riesgo", r: "Acompaña sin invadir. Lleva al estudiante a un lugar seguro y tranquilo, retira objetos peligrosos y reduce el ruido, la luz y el número de personas mirando. Cuando baje la intensidad, permite que se exprese con un adulto de confianza.", s: [["dec", "etapa 2"]] },
+  { id: "f55", m: "tea", t: "Contención física: solo como último recurso", r: "No es una estrategia recomendable en el contexto educativo. Solo procede en casos excepcionales de riesgo extremo, por personal capacitado y con autorización escrita de la familia. Después se informa a la familia para que evalúe apoyo de salud mental.", s: [["c586"], ["dec", "etapa 3"]] },
+  { id: "f56", m: "tea", t: "Tres roles durante una crisis", r: "Encargado/a: acompaña al estudiante con voz baja y cálida. Acompañante interno: está en la sala, a distancia y atento. Acompañante externo: queda afuera, coordina y llama a la familia o a directivos. Si el encargado no logra calmar la situación, se cambia.", s: [["dec", "roles"]] },
+  { id: "f57", m: "tea", t: "Lo que no se hace en una crisis", r: "No regañar, no amenazar con sanciones, no pedirle que «no se enoje» y no intentar razonar con el estudiante sobre su conducta en ese momento. La conversación viene después, cuando esté en calma.", s: [["dec", "qué evitar"]] },
+  { id: "f58", m: "tea", t: "Después del episodio", r: "Cuando el estudiante esté tranquilo, se conversa lo ocurrido y se acuerdan pasos para evitarlo. Si hubo daño, se repara según las normas. También se apoya al curso que lo presenció y se deja registro en la bitácora.", s: [["dec", "después de la crisis"], ["c586"]] },
+  { id: "f59", m: "tea", t: "PAEC: Plan de Acompañamiento Emocional y Conductual", r: "Plan individual que se elabora con la familia, con registro de citaciones y acuerdos. Se informa al personal al inicio del año y cada vez que cambia, su contenido es confidencial y considera el traslado privado del estudiante lejos de sus compañeros.", s: [["c586"]] },
+  { id: "f60", m: "tea", t: "Avisar al apoderado ante una emergencia", r: "Se contacta por la vía más rápida y se registra la hora y la persona contactada. Cada episodio se informa al término de la jornada, y un directivo firma un certificado con las horas de llegada y salida del apoderado.", s: [["c586"]] },
+  { id: "f61", m: "tea", t: "Permiso laboral para acudir al colegio", r: "Madres, padres o tutores de menores con TEA que trabajan con contrato pueden salir a atender emergencias en el establecimiento. Ese tiempo se considera trabajado y no puede tratarse como abandono del trabajo. El trabajador avisa a la Inspección del Trabajo.", s: [["l21545", "art. 25, art. 66 quinquies del Código del Trabajo"], ["teamin"]] },
+  { id: "f62", m: "tea", t: "Medidas disciplinarias y TEA", r: "Ninguna medida disciplinaria puede fundarse, directa o indirectamente, en la condición del estudiante. Los estudiantes con TEA no están exentos de las normas, pero no se sanciona una falta cuyo origen está vinculado a su condición.", s: [["c586"]] },
+  { id: "f63", m: "tea", t: "Lo que el colegio no puede exigir", r: "No se puede condicionar la matrícula a compromisos de los apoderados por los episodios de desregulación, ni condicionar la permanencia a que el estudiante tome medicamentos. El retiro anticipado solo es excepcional.", s: [["c586"]] },
+  { id: "f64", m: "tea", t: "Si sospechas que un estudiante tiene TEA", r: "La ley dice que los establecimientos derivan a salud a niños y niñas con sospecha de TEA, según el protocolo del Ministerio de Salud. Como inspector/a no diagnosticas: comparte lo que observas con el equipo de convivencia o PIE.", s: [["l21545", "art. 12"]] },
+  { id: "f65", m: "tea", t: "Trato digno a la vista de todos", r: "Los establecimientos deben exhibir carteles con un mensaje claro y simple: las personas con autismo deben ser tratadas con dignidad y respeto en todo momento y en cualquier circunstancia.", s: [["c586"]] },
+
+  { id: "f66", m: "inc", t: "Ley 20.422 de inclusión de personas con discapacidad", r: "Busca asegurar la igualdad de oportunidades y la plena inclusión social de las personas con discapacidad. La discapacidad aparece cuando una deficiencia se encuentra con barreras del entorno que impiden participar plenamente.", s: [["l20422", "arts. 1 y 5"]] },
+  { id: "f67", m: "inc", t: "Ajustes necesarios", r: "Medidas de adecuación del ambiente físico, social y de actitud que facilitan la accesibilidad de una persona con discapacidad, sin imponer una carga desproporcionada.", s: [["l20422", "art. 8"]] },
+  { id: "f68", m: "inc", t: "Derecho a estudiar en la educación regular", r: "El Estado garantiza a las personas con discapacidad el acceso a establecimientos públicos y privados que reciben aportes del Estado. Los colegios regulares deben incorporar innovaciones, adecuaciones y recursos adicionales para que permanezcan y progresen.", s: [["l20422", "arts. 34 y 36"]] },
+  { id: "f69", m: "inc", t: "Discriminación arbitraria", r: "Toda distinción, exclusión o restricción sin justificación razonable que prive, perturbe o amenace el ejercicio de derechos fundamentales. Entre los motivos que la ley nombra está la discapacidad.", s: [["l20609", "art. 2"]] },
+  { id: "f70", m: "inc", t: "Dónde se reclama", r: "Ante la Superintendencia de Educación; ante el Juzgado de Policía Local por actos arbitrarios contra derechos de la Ley 20.422; o con la acción de no discriminación de la Ley 20.609 ante un juzgado de letras.", s: [["teamin"], ["l20609"]] },
+  { id: "f71", m: "inc", t: "NEE permanentes y transitorias", r: "Las permanentes son barreras que duran toda la escolaridad por una discapacidad diagnosticada. Las transitorias requieren apoyos extraordinarios durante un período para acceder o progresar en el currículum.", s: [["d170", "art. 2"]] },
+  { id: "f72", m: "inc", t: "Ejemplos de NEE", r: "Permanentes: autismo, discapacidad intelectual, auditiva o visual, disfasia y multidéficit. Transitorias: dificultades específicas del aprendizaje, trastorno específico del lenguaje, déficit atencional y rendimiento intelectual limítrofe.", s: [["pie"]] },
+  { id: "f73", m: "inc", t: "Programa de Integración Escolar (PIE)", r: "Estrategia inclusiva que entrega apoyos adicionales a estudiantes con NEE, dentro de la sala regular. Los especialistas trabajan en colaboración con el profesor del curso, con co-enseñanza.", s: [["pie"]] },
+  { id: "f74", m: "inc", t: "Evaluación diagnóstica de NEE", r: "Es integral e interdisciplinaria y la hacen profesionales idóneos inscritos en el registro del Ministerio. Requiere autorización de la familia y se reevalúa cada año.", s: [["d170", "arts. 4, 11 y 15"], ["pie"]] },
+  { id: "f75", m: "inc", t: "¿Qué es un tutor sombra?", r: "Un acompañante que contrata la familia para apoyar a su hijo o hija en la sala. No es funcionario del colegio ni una figura regulada en detalle: la normativa lo deja al acuerdo entre el establecimiento y los apoderados.", s: [["copiapo"]] },
+  { id: "f76", m: "inc", t: "¿Puede el colegio negar un tutor sombra?", r: "Debe dar razones fundadas. En 2024 la Corte de Copiapó ordenó permitir una tutora sombra porque el rechazo, sin justificación suficiente, fue arbitrario y discriminatorio para una estudiante con TEA. Ante una condición así se exige una justificación muy sólida.", s: [["copiapo"], ["l21545", "art. 18"], ["l20609", "art. 2"]] },
+  { id: "f77", m: "inc", t: "Tutor sombra: tu rol como inspector/a", r: "Registra su ingreso como el de cualquier adulto externo, conoce por escrito los acuerdos con dirección (horario, espacios, funciones) y canaliza dudas al equipo PIE o de convivencia. El tutor apoya, pero el cuidado de los estudiantes sigue siendo responsabilidad del colegio.", s: [["c482", "reglamento interno"], ["copiapo"]] },
+  { id: "f78", m: "inc", t: "Tutor sombra y PIE no son lo mismo", r: "El PIE es un apoyo del propio colegio, con profesionales especialistas. El tutor sombra lo financia la familia y no reemplaza los apoyos que el establecimiento debe entregar.", s: [["pie"], ["copiapo"]] },
+  { id: "f79", m: "inc", t: "Formación del personal", r: "Los colegios deben capacitar a su personal para dar una atención adecuada, oportuna e inclusiva, responder ante desregulaciones y promover la autorregulación y autonomía de los estudiantes.", s: [["c586"], ["l21545", "art. 20"]] }
 ];
 
 const PREGUNTAS = [
@@ -402,7 +462,38 @@ const PREGUNTAS = [
   { id: "p38", m: "seg", n: 1, q: "¿Qué asistencia mínima exige el Decreto 67 para la promoción?", o: ["75%", "80%", "85%", "90%"], c: 2, e: "El director puede autorizar excepciones por razones fundadas.", s: [["d67", "art. 10"]] },
   { id: "p39", m: "seg", n: 2, q: "Según Mineduc, ¿qué asistencia se considera inasistencia grave?", o: ["95% o menos", "90% o menos", "85% o menos", "50% o menos"], c: 2, e: "Entre 85% y 90% es inasistencia reiterada; 85% o menos es grave.", s: [["asist"]] },
   { id: "p40", m: "seg", n: 2, q: "¿Qué resolución de Mineduc regula el Plan Integral de Seguridad Escolar?", o: ["Res. Ex. 2515 de 2018", "Circular 482", "Decreto 67", "Ley 20.594"], c: 0, e: "El PISE organiza la prevención y la respuesta ante emergencias.", s: [["pise"]] },
-  { id: "p41", m: "seg", n: 1, q: "Al revisar una mochila aparece un cuchillo. Según la Ley 21.827, se avisa de inmediato a:", o: ["Nadie, se guarda el cuchillo", "La familia y Carabineros o PDI", "Solo al profesor jefe", "Al centro de alumnos"], c: 1, e: "El personal autorizado debe comunicarlo de inmediato a la familia y a las policías.", s: [["l21827", "art. 16 J LGE"]] }
+  { id: "p41", m: "seg", n: 1, q: "Al revisar una mochila aparece un cuchillo. Según la Ley 21.827, se avisa de inmediato a:", o: ["Nadie, se guarda el cuchillo", "La familia y Carabineros o PDI", "Solo al profesor jefe", "Al centro de alumnos"], c: 1, e: "El personal autorizado debe comunicarlo de inmediato a la familia y a las policías.", s: [["l21827", "art. 16 J LGE"]] },
+  { id: "p42", m: "rol", n: 1, q: "¿Qué datos debe tener un buen registro de un incidente?", o: ["Tu opinión sobre los involucrados", "Fecha, hora, lugar, personas y lo que dijeron con sus palabras", "Solo el nombre del estudiante culpable", "Un resumen general sin detalles"], c: 1, e: "Se registran hechos verificables, no opiniones.", s: [["c482", "debido proceso"]] },
+  { id: "p43", m: "rol", n: 1, q: "Según el Estatuto Docente, el inspector general es:", o: ["Un asistente de la educación", "Un docente directivo", "Un apoderado elegido", "Un funcionario de la Superintendencia"], c: 1, e: "El inspector general es docente directivo. El inspector de patio suele ser asistente de la educación.", s: [["estatuto"]] },
+  { id: "p44", m: "norma", n: 1, q: "¿Qué permite al director la Ley 21.128 Aula Segura?", o: ["Expulsar sin procedimiento", "Suspender como medida cautelar durante un procedimiento por faltas graves o gravísimas", "Cerrar el colegio un día", "Revisar celulares de los estudiantes"], c: 1, e: "La suspensión cautelar se aplica mientras dura el procedimiento sancionatorio.", s: [["l21128"]] },
+  { id: "p45", m: "norma", n: 1, q: "¿Qué hace la Agencia de Calidad de la Educación?", o: ["Fiscaliza y multa", "Evalúa y orienta", "Contrata inspectores", "Entrega el seguro escolar"], c: 1, e: "La Superintendencia fiscaliza; la Agencia evalúa y orienta.", s: [["l20529"]] },
+  { id: "p46", m: "conv", n: 1, q: "¿Cuándo se entrega el reglamento interno a las familias?", o: ["Solo si lo piden por escrito", "Al matricular, e informando sus cambios durante el año", "Cuando el estudiante comete una falta", "Al terminar el año"], c: 1, e: "Las familias deben conocer las normas antes de que se apliquen.", s: [["dfl2_98", "art. 6 d"]] },
+  { id: "p47", m: "conv", n: 1, q: "La buena convivencia educativa se define como:", o: ["La ausencia total de conflictos", "La coexistencia armónica de la comunidad, con relaciones inclusivas y participativas", "El cumplimiento estricto de las sanciones", "Que los estudiantes no hablen en clases"], c: 1, e: "Los conflictos existen; la buena convivencia es cómo se convive y se resuelven.", s: [["l21809", "art. 16 A LGE"]] },
+  { id: "p48", m: "prot", n: 1, q: "Detectas que un estudiante consume marihuana, sin vender. ¿Cómo se aborda?", o: ["Se le expulsa de inmediato", "Con apoyo y derivación a la red, por ejemplo SENDA Previene, según el protocolo", "Se ignora si es fuera del colegio", "Se le pide al curso que lo vigile"], c: 1, e: "El consumo se aborda con apoyo; el microtráfico es un delito que se denuncia.", s: [["senda"], ["c482"]] },
+  { id: "p49", m: "seg", n: 1, q: "Un adulto que no conoces quiere retirar a un estudiante. ¿Qué haces?", o: ["Lo dejas ir si el estudiante lo conoce", "Verificas que sea apoderado o adulto autorizado, su identidad, y registras hora y motivo", "Le pides que vuelva mañana sin explicar", "Llamas a Carabineros siempre"], c: 1, e: "Solo se entrega al apoderado o a un adulto autorizado, según el reglamento.", s: [["c482", "reglamento interno"]] },
+
+  { id: "p50", m: "tea", n: 1, q: "Según la Ley 21.545, el trastorno del espectro autista es:", o: ["Una enfermedad contagiosa", "Una diferencia o diversidad en el neurodesarrollo típico, que requiere diagnóstico", "Un problema de mala crianza", "Una falta disciplinaria"], c: 1, e: "La ley lo define como una condición del neurodesarrollo que debe contar con diagnóstico.", s: [["l21545", "art. 2"]] },
+  { id: "p51", m: "tea", n: 1, q: "Un estudiante con TEA empieza a gritar y a mover las manos sin parar. Lo primero que NO debes hacer es:", o: ["Ofrecerle un lugar tranquilo", "Retarlo y amenazarlo con una anotación", "Hablarle con voz calmada", "Bajar el ruido alrededor"], c: 1, e: "Regañar o amenazar con sanciones escala la crisis. La conversación viene cuando esté en calma.", s: [["dec", "qué evitar"]] },
+  { id: "p52", m: "tea", n: 1, q: "¿Cuál es una señal previa de desregulación?", o: ["Que pida ir al baño", "Aumento de movimientos repetitivos, irritabilidad o respiración agitada", "Que termine rápido su tarea", "Que salude a un compañero"], c: 1, e: "Reconocer las señales previas permite actuar antes de que la crisis escale.", s: [["dec", "prevención"]] },
+  { id: "p53", m: "tea", n: 1, q: "En una desregulación con riesgo (etapa 2), ¿qué corresponde?", o: ["Dejar que el curso mire para que aprenda", "Llevarlo a un lugar seguro, retirar objetos peligrosos y reducir ruido y público", "Sujetarlo entre varios de inmediato", "Mandarlo solo a inspectoría"], c: 1, e: "Se acompaña sin invadir, en un lugar seguro y con pocos estímulos.", s: [["dec", "etapa 2"]] },
+  { id: "p54", m: "tea", n: 1, q: "Ante una emergencia con un estudiante con TEA, ¿cómo se contacta al apoderado?", o: ["Por correo al día siguiente", "Por la vía más rápida, registrando la hora y quién fue contactado", "Solo si el estudiante lo pide", "Mediante la libreta de comunicaciones"], c: 1, e: "La Circular 586 pide contacto rápido y registro de hora y persona.", s: [["c586"]] },
+  { id: "p55", m: "tea", n: 1, q: "¿Qué es el PAEC?", o: ["Un formulario de matrícula", "El Plan de Acompañamiento Emocional y Conductual, elaborado con la familia", "Una sanción por mala conducta", "Un examen médico"], c: 1, e: "Es un plan individual, confidencial, que se informa al personal al inicio del año.", s: [["c586"]] },
+  { id: "p56", m: "tea", n: 1, q: "Si sospechas que un estudiante podría tener TEA, tú:", o: ["Le dices a la familia que tiene autismo", "Compartes lo que observas con el equipo de convivencia o PIE para que se derive según protocolo", "Lo cambias de curso", "No haces nada"], c: 1, e: "Los establecimientos derivan a salud según protocolo; el inspector no diagnostica.", s: [["l21545", "art. 12"]] },
+  { id: "p57", m: "tea", n: 2, q: "Sobre la contención física de un estudiante en crisis, la Circular 586 indica que:", o: ["Es la primera medida recomendada", "No es recomendable y solo procede excepcionalmente ante riesgo de daño", "Puede hacerla cualquier adulto", "Reemplaza el aviso a la familia"], c: 1, e: "Es excepcional, por personal capacitado, con autorización escrita de la familia, y luego se informa.", s: [["c586"], ["dec", "etapa 3"]] },
+  { id: "p58", m: "tea", n: 2, q: "Durante una desregulación, un estudiante con TEA bota una silla. El profesor pide suspenderlo. ¿Qué dice la normativa?", o: ["Debe suspenderse siempre", "No se aplican medidas que se funden en su condición; si la conducta se origina en ella, no se sanciona", "Debe cambiarse de colegio", "Se suspende solo si lo pide el curso"], c: 1, e: "Los estudiantes con TEA no están exentos de las normas, pero no se sanciona lo vinculado en su origen a su condición.", s: [["c586"]] },
+  { id: "p59", m: "tea", n: 2, q: "El colegio quiere exigir que un estudiante tome medicamentos para seguir matriculado. Esto:", o: ["Está permitido si lo firma el apoderado", "Está prohibido por la Circular 586", "Lo decide el profesor jefe", "Solo es válido en enseñanza media"], c: 1, e: "No se puede condicionar la permanencia al consumo de medicamentos.", s: [["c586"]] },
+  { id: "p60", m: "tea", n: 2, q: "Una madre trabajadora sale de su empleo para acudir a una crisis de su hijo con TEA. Según el Código del Trabajo:", o: ["Debe pedir vacaciones", "Ese tiempo se considera trabajado y no es abandono del trabajo", "Se descuenta de su sueldo", "Necesita permiso de la Superintendencia de Educación"], c: 1, e: "La Ley TEA agregó el art. 66 quinquies al Código del Trabajo.", s: [["l21545", "art. 25"], ["teamin"]] },
+  { id: "p61", m: "tea", n: 2, q: "En una crisis con tres adultos, ¿qué hace el acompañante externo?", o: ["Sujeta al estudiante", "Queda afuera, coordina y llama a la familia o a directivos", "Explica la conducta al curso", "Graba el episodio"], c: 1, e: "El encargado acompaña, el acompañante interno observa a distancia y el externo coordina.", s: [["dec", "roles"]] },
+
+  { id: "p62", m: "inc", n: 1, q: "¿Qué es un tutor sombra?", o: ["Un funcionario del Mineduc", "Un acompañante contratado por la familia que apoya al estudiante en la sala", "El profesor jefe del curso", "Un inspector de patio en práctica"], c: 1, e: "No es personal del colegio; su presencia se acuerda entre el establecimiento y los apoderados.", s: [["copiapo"]] },
+  { id: "p63", m: "inc", n: 1, q: "¿Qué es el PIE?", o: ["Un plan de emergencias", "Una estrategia inclusiva que da apoyos adicionales a estudiantes con NEE dentro de la sala", "Un programa de alimentación", "Un sumario administrativo"], c: 1, e: "El Programa de Integración Escolar trabaja dentro del aula regular, con co-enseñanza.", s: [["pie"]] },
+  { id: "p64", m: "inc", n: 1, q: "Las NEE permanentes son las que:", o: ["Duran un semestre", "Se presentan durante toda la escolaridad por una discapacidad diagnosticada", "Desaparecen con una sanción", "Solo existen en educación parvularia"], c: 1, e: "Las transitorias, en cambio, requieren apoyos por un período determinado.", s: [["d170", "art. 2"]] },
+  { id: "p65", m: "inc", n: 1, q: "¿Cuál de estas es una NEE transitoria según Mineduc?", o: ["Discapacidad visual", "Trastorno específico del lenguaje", "Autismo", "Discapacidad auditiva"], c: 1, e: "El TEL, las dificultades específicas del aprendizaje y el déficit atencional son transitorias.", s: [["pie"]] },
+  { id: "p66", m: "inc", n: 1, q: "Un apoderado dice que no quiere «niños con autismo» en el curso de su hijo. ¿Qué responde el colegio?", o: ["Que se evaluará cambiarlos", "Que todos tienen derecho a estudiar sin discriminación arbitraria", "Que tiene razón", "Que hable con los otros apoderados"], c: 1, e: "La Ley TEA y la Ley 20.609 prohíben la discriminación arbitraria por discapacidad.", s: [["l21545", "art. 18"], ["l20609", "art. 2"]] },
+  { id: "p67", m: "inc", n: 2, q: "¿Qué son los «ajustes necesarios» en la Ley 20.422?", o: ["Cambios en el sueldo de los docentes", "Adecuaciones del ambiente físico, social y de actitud que facilitan la accesibilidad, sin carga desproporcionada", "Sanciones más suaves", "Exámenes especiales de ingreso"], c: 1, e: "Por ejemplo, anticipar cambios de rutina o adaptar un espacio.", s: [["l20422", "art. 8"]] },
+  { id: "p68", m: "inc", n: 2, q: "En 2024, la Corte de Copiapó revisó el rechazo de un colegio a una tutora sombra. ¿Qué resolvió?", o: ["Que el colegio debe pagar la tutora", "Que el rechazo sin justificación suficiente fue arbitrario y discriminatorio, y ordenó permitirla", "Que los tutores sombra están prohibidos", "Que solo la Superintendencia puede autorizarlos"], c: 1, e: "La tutora la pagaba la familia; la corte exigió al colegio razones sólidas para negarla.", s: [["copiapo"]] },
+  { id: "p69", m: "inc", n: 2, q: "¿Ante quién se puede denunciar un acto arbitrario contra derechos de la Ley 20.422?", o: ["Ante el Juzgado de Policía Local", "Ante el Servicio de Impuestos Internos", "Ante el centro de padres", "Ante el Registro Civil"], c: 0, e: "También se puede reclamar en la Superintendencia o con la acción de la Ley 20.609.", s: [["teamin"]] },
+  { id: "p70", m: "inc", n: 2, q: "¿Quién realiza la evaluación diagnóstica de NEE según el Decreto 170?", o: ["El inspector general", "Profesionales idóneos inscritos en el registro, con un enfoque integral e interdisciplinario", "El profesor jefe por sí solo", "El centro de alumnos"], c: 1, e: "Además requiere autorización de la familia y se reevalúa cada año.", s: [["d170", "arts. 4 y 15"]] }
 ];
 
 const CASOS = [
@@ -547,7 +638,61 @@ const CASOS = [
         { t: "Lo mando de vuelta a clases con la mochila.", p: 0, f: "Debe esperar supervisado fuera de la sala hasta que llegue el apoderado." } ] }
     ],
     claves: ["Solo si el reglamento la contempla.", "Lugar privado y dos adultos, uno de convivencia.", "Nunca desnudar ni revisar el cuerpo.", "Si se niega: apoderado y supervisión."],
-    s: [["l21827", "art. 16 J LGE"]] }
+    s: [["l21827", "art. 16 J LGE"]] },
+  { id: "c10", m: "tea", n: 1, titulo: "Crisis después del timbre",
+    intro: "En el recreo suena fuerte la alarma de un simulacro. Tomás, de 3° básico y con diagnóstico de TEA, se tapa los oídos, grita y empieza a golpear la pared con las manos. Un grupo de niños se acerca a mirar.",
+    pasos: [
+      { q: "¿Qué haces primero?", o: [
+        { t: "Pido a otro adulto que aleje a los curiosos, le hablo con voz baja y lo acompaño a un lugar tranquilo y seguro.", p: 2, f: "Etapa 2: acompañar sin invadir, reducir estímulos y público, y llevarlo a un lugar seguro." },
+        { t: "Le digo firme que se calme o tendrá una anotación.", p: 0, f: "Amenazar con sanciones o pedirle que «no se enoje» escala la crisis." },
+        { t: "Lo sujeto de los brazos para que deje de golpear.", p: 0, f: "La contención física es excepcional, por personal capacitado y con autorización escrita de la familia." } ] },
+      { q: "Tomás sigue alterado. ¿Cómo se organizan los adultos?", o: [
+        { t: "Una persona lo acompaña, otra observa a distancia y una tercera, afuera, avisa al equipo y a la familia según su PAEC.", p: 2, f: "Así se reparten los roles de encargado, acompañante interno y acompañante externo." },
+        { t: "Tres adultos le hablan a la vez para convencerlo.", p: 0, f: "Muchas voces aumentan los estímulos. Solo el encargado le habla." },
+        { t: "Lo dejamos solo en la sala hasta que se le pase.", p: 0, f: "Un estudiante en crisis no se deja solo: se acompaña a distancia." } ] },
+      { q: "Ya está en calma. ¿Qué sigue?", o: [
+        { t: "Aviso al apoderado por la vía más rápida, registro la hora y la persona contactada, y anoto el episodio en la bitácora.", p: 2, f: "La Circular 586 pide registro del contacto e informar cada episodio; la bitácora ayuda a identificar desencadenantes." },
+        { t: "Le explico frente al curso por qué estuvo mal lo que hizo.", p: 0, f: "La conversación se hace en privado y cuando esté tranquilo, sin exponerlo." },
+        { t: "No aviso a nadie porque ya pasó.", p: 1, f: "Calmarlo fue lo principal, pero falta informar a la familia y registrar." } ] }
+    ],
+    claves: ["Reducir estímulos y público, y acompañar sin invadir.", "No regañar ni amenazar durante la crisis.", "Repartir roles entre adultos.", "Avisar a la familia, registrar hora y anotar en la bitácora."],
+    s: [["dec"], ["c586"]] },
+  { id: "c11", m: "tea", n: 2, titulo: "La apoderada que salió del trabajo",
+    intro: "Sofía, de 7° básico con TEA, tuvo una desregulación fuerte y botó una mesa. Su PAEC dice que se llame a su madre. La madre llega desde su trabajo y pide un documento. Mientras tanto, un profesor exige suspender a Sofía «por romper el mobiliario».",
+    pasos: [
+      { q: "La madre necesita justificar su salida del trabajo. ¿Qué haces?", o: [
+        { t: "Gestiono con dirección un certificado firmado por un directivo con las horas de llegada y salida.", p: 2, f: "La Circular 586 lo exige, y la Ley TEA protege ese permiso en el Código del Trabajo." },
+        { t: "Le digo que el colegio no entrega documentos.", p: 0, f: "El certificado es obligación del establecimiento." },
+        { t: "Le escribo una nota a mano con mi firma.", p: 1, f: "Tiene buena intención, pero lo firma un miembro del equipo directivo." } ] },
+      { q: "El profesor insiste en suspenderla. ¿Qué respondes?", o: [
+        { t: "Que se revise con convivencia y el PAEC: no se aplican medidas que se funden en su condición, y si la conducta se originó en la crisis, no corresponde sancionar.", p: 2, f: "Sofía no está exenta de las normas, pero esta conducta surgió de la desregulación." },
+        { t: "Que la suspendan 5 días para que aprenda.", p: 0, f: "Sería una medida fundada en su condición, prohibida por la Circular 586." },
+        { t: "Que le pidan a la madre que la retire el resto de la semana.", p: 0, f: "El retiro anticipado es excepcional y no se usa como sanción." } ] },
+      { q: "¿Cómo se cierra el episodio?", o: [
+        { t: "Cuando esté en calma, Sofía ayuda a ordenar la sala; se registra en la bitácora y se informa a la madre al final de la jornada.", p: 2, f: "Reparar cuando esté tranquila, registrar e informar cada episodio." },
+        { t: "Se le pide que se disculpe en ese mismo momento frente a todos.", p: 1, f: "La reparación es positiva, pero solo cuando está en calma y sin exponerla." },
+        { t: "Se comenta el caso en el grupo de apoderados para que entiendan.", p: 0, f: "El PAEC y la información de Sofía son confidenciales." } ] }
+    ],
+    claves: ["Certificado de asistencia firmado por un directivo.", "No sancionar conductas originadas en su condición.", "Reparación cuando esté en calma.", "Confidencialidad del PAEC."],
+    s: [["c586"], ["l21545", "art. 25"], ["dec", "después de la crisis"]] },
+  { id: "c12", m: "inc", n: 1, titulo: "Llega una tutora sombra",
+    intro: "Un lunes, una mujer se presenta en portería: «soy la tutora sombra de Martina, de 2° básico, y vengo a entrar a la sala con ella». Tú no tienes información sobre esto.",
+    pasos: [
+      { q: "¿Qué haces?", o: [
+        { t: "La recibo con amabilidad, registro su ingreso y confirmo con dirección o el equipo PIE si existe un acuerdo con la familia.", p: 2, f: "Su presencia depende de un acuerdo entre el colegio y los apoderados; un adulto externo siempre se registra." },
+        { t: "La dejo pasar a la sala porque dice que es tutora.", p: 0, f: "Ningún adulto externo ingresa sin verificar y registrar." },
+        { t: "Le digo que los tutores sombra están prohibidos.", p: 0, f: "No están prohibidos: se acuerdan con el colegio, que debe dar razones fundadas si los rechaza." } ] },
+      { q: "Ya hay acuerdo. En el recreo, la tutora reta a otro niño que empujó a Martina. ¿Qué haces?", o: [
+        { t: "Me acerco, atiendo la situación como inspector/a y luego converso con el equipo PIE o convivencia sobre los límites de su función.", p: 2, f: "La tutora apoya a Martina, pero el cuidado de todos los estudiantes sigue siendo del colegio." },
+        { t: "La dejo, porque ella sabe más de Martina.", p: 1, f: "Conoce a Martina, pero la disciplina de otros estudiantes no es su función." },
+        { t: "Le prohíbo volver al colegio.", p: 0, f: "No te corresponde decidirlo; se canaliza con dirección según el acuerdo." } ] },
+      { q: "Otro apoderado reclama: «¿por qué esa niña tiene una persona solo para ella?». ¿Qué respondes?", o: [
+        { t: "Le explico que el colegio entrega apoyos según las necesidades de cada estudiante, sin dar detalles de Martina.", p: 2, f: "Así se resguarda la confidencialidad y el trato no discriminatorio." },
+        { t: "Le cuento el diagnóstico de Martina para que entienda.", p: 0, f: "La información de un estudiante es confidencial." },
+        { t: "Le digo que tiene razón y que es injusto.", p: 0, f: "Los apoyos según necesidades no son privilegios: son ajustes para que pueda aprender." } ] }
+    ],
+    claves: ["Verificar el acuerdo y registrar al adulto externo.", "El colegio mantiene el cuidado de todos los estudiantes.", "Canalizar dudas con PIE o convivencia.", "Confidencialidad y no discriminación."],
+    s: [["copiapo"], ["c482", "reglamento interno"], ["l20422", "art. 8"], ["l20609", "art. 2"]] }
 ];
 
 </script>
@@ -581,7 +726,7 @@ const CASOS = [
   };
 
   // ---------- estado ----------
-  const fresh = () => ({ v: 2, mode: "formacion", goal: 30, xp: 0, days: {}, met: {}, ch: {}, cards: {}, q: {}, cases: {}, badges: {}, rounds: [], combo: 0, seenFuentes: false, welcomed: false });
+  const fresh = () => ({ v: 2, mode: "formacion", goal: 30, xp: 0, days: {}, met: {}, ch: {}, cards: {}, q: {}, cases: {}, badges: {}, rounds: [], cert: {}, hist: {}, combo: 0, seenFuentes: false, welcomed: false });
   let S = loadLocal();
   function loadLocal() {
     try {
@@ -601,6 +746,7 @@ const CASOS = [
   }
   const cloud = { state: "local", name: "", email: "", ref: null, timer: null };
   function save() {
+    try { S.hist[today()] = globalPct(); const ks = Object.keys(S.hist).sort(); ks.slice(0, -120).forEach(k => delete S.hist[k]); } catch (e) {}
     try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
     if (cloud.ref && cloud.state !== "readonly") {
       clearTimeout(cloud.timer);
@@ -620,7 +766,7 @@ const CASOS = [
     const base = (b.xp || 0) > (a.xp || 0) ? b : a, other = base === a ? b : a;
     const out = Object.assign(fresh(), base);
     ["days"].forEach(k => { out[k] = Object.assign({}, other[k]); Object.entries(base[k] || {}).forEach(([d, v]) => { out[k][d] = Math.max(v, out[k][d] || 0); }); });
-    ["met", "ch", "badges"].forEach(k => { out[k] = Object.assign({}, other[k] || {}, base[k] || {}); });
+    ["met", "ch", "badges", "cert", "hist"].forEach(k => { out[k] = Object.assign({}, other[k] || {}, base[k] || {}); });
     out.welcomed = a.welcomed || b.welcomed;
     return out;
   }
@@ -741,7 +887,9 @@ const CASOS = [
     { id: "casos", n: "Buen criterio", d: "Completa todos los casos", ic: "chat" },
     { id: "fuentes", n: "Fuente en mano", d: "Revisa la biblioteca de fuentes", ic: "book" },
     { id: "nivel4", n: "De patio", d: "Llega a Inspector/a de patio", ic: "shield" },
-    { id: "nivel7", n: "Inspección general", d: "Llega a Inspector/a general", ic: "shield" }
+    { id: "nivel7", n: "Inspección general", d: "Llega a Inspector/a general", ic: "shield" },
+    { id: "cert1", n: "Certificado/a", d: "Aprueba tu primer examen de tema", ic: "medal" },
+    { id: "certall", n: "Experto/a integral", d: "Certifica todos los temas", ic: "shield" }
   ];
   function unlock(id) {
     if (S.badges[id]) return;
@@ -806,11 +954,11 @@ const CASOS = [
 
   // ---------- navegación ----------
   let view = "inicio";
-  const VIEWS = ["inicio", "fichas", "preguntas", "casos", "perfil", "fuentes"];
+  const VIEWS = ["inicio", "fichas", "preguntas", "casos", "perfil", "fuentes", "tema"];
   const render = {};
   function go(v) {
     view = VIEWS.includes(v) ? v : "inicio";
-    const tab = view === "fuentes" ? "perfil" : view;
+    const tab = view === "fuentes" ? "perfil" : view === "tema" ? "inicio" : view;
     document.querySelectorAll(".nav button").forEach(b => b.setAttribute("aria-current", b.dataset.view === tab ? "page" : "false"));
     try { history.replaceState(null, "", "#" + view); } catch (e) {}
     Q.list = null; C.cur = null;
@@ -822,11 +970,20 @@ const CASOS = [
 
   const pool = () => S.mode === "profesional" ? PREGUNTAS : PREGUNTAS.filter(p => p.n === 1);
   const casePool = () => S.mode === "profesional" ? CASOS : CASOS.filter(c => c.n === 1);
-  function modPct(m) {
-    const f = FICHAS.filter(x => x.m === m), p = pool().filter(x => x.m === m);
-    const done = f.filter(x => (S.cards[x.id] || {}).b >= 4).length + p.filter(x => (S.q[x.id] || {}).last === true).length;
-    return Math.round(100 * done / Math.max(1, f.length + p.length));
+  // ---------- dominio por tema (conocimiento, distinto de los puntos) ----------
+  const RANGOS = [[0, "Inicial"], [25, "Básico"], [50, "Intermedio"], [75, "Avanzado"]];
+  const rango = p => { let r = 0; RANGOS.forEach(([min], k) => { if (p >= min) r = k; }); return r; };
+  function modStats(m) {
+    const f = FICHAS.filter(x => x.m === m), p = pool().filter(x => x.m === m), c = casePool().filter(x => x.m === m);
+    const fm = f.filter(x => (S.cards[x.id] || {}).b >= 4).length, pk = p.filter(x => (S.q[x.id] || {}).last === true).length;
+    const cs = c.reduce((a, x) => a + (S.cases[x.id] || 0) / 100, 0);
+    return { f: f.length, fm, p: p.length, pk, c: c.length, cs, pct: Math.round(100 * (fm + pk + cs) / Math.max(1, f.length + p.length + c.length)) };
   }
+  function modPct(m) { return modStats(m).pct; }
+  function globalPct() { return Math.round(MODULOS.reduce((a, m) => a + modPct(m.id), 0) / MODULOS.length); }
+  const examList = m => PREGUNTAS.filter(p => p.m === m);
+  const certified = m => !!(S.cert[m] && S.cert[m].ok);
+  const SEAL = '<span class="seal"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2h4l1 4 1-4h4l-3 7a6 6 0 1 1-4 0zm5 9a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/></svg>Certificado</span>';
   function dailyQuestions(d = today()) { return shuffle(pool(), seeded("desafio-" + d + "-" + S.mode)).slice(0, 5); }
   function dailyCard(d = today()) { return FICHAS[Math.floor(seeded("dato-" + d)() * FICHAS.length)]; }
 
@@ -880,12 +1037,16 @@ const CASOS = [
         ${srcHtml(dato.s)}
       </section>
       <section class="stack">
-        <h2 style="font-size:1.15rem">Tu avance por módulo</h2>
-        <div class="modules">${MODULOS.map(m => { const p = modPct(m.id); return `<button class="mod" data-mod="${m.id}"><span class="mi">${m.icon}</span><div><h3>${m.nombre}</h3><div class="bar"><i style="width:${p}%"></i></div></div><span class="pct">${p}%</span></button>`; }).join("")}</div>
+        <div class="row between"><h2 style="font-size:1.15rem">Tu dominio por tema</h2><span class="small muted">${MODULOS.filter(m => certified(m.id)).length} de ${MODULOS.length} certificados</span></div>
+        <section class="card know" style="padding:14px">
+          <div class="ring" style="width:72px;height:72px" aria-label="Conocimiento total ${globalPct()}%"><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="none" stroke="var(--surface-2)" stroke-width="9"/><circle cx="40" cy="40" r="34" fill="none" stroke="var(--good)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${2 * Math.PI * 34}" stroke-dashoffset="${2 * Math.PI * 34 * (1 - globalPct() / 100)}"/></svg><span class="lbl">${globalPct()}%</span></div>
+          <div class="stack" style="gap:2px"><p class="eyebrow">Conocimiento total</p><h3 style="font-size:1.1rem">Rango ${RANGOS[rango(globalPct())][1]}</h3><p class="small muted">Sube cuando aciertas, dominas fichas y resuelves casos. Toca un tema para ver qué te falta y rendir su examen.</p></div>
+        </section>
+        <div class="modules">${MODULOS.map(m => { const p = modPct(m.id); return `<button class="mod" data-mod="${m.id}"><span class="mi">${m.icon}</span><div><h3>${m.nombre}</h3><div class="bar"><i style="width:${p}%"></i></div></div><span class="rk"><span class="pct">${p}%</span>${certified(m.id) ? SEAL : `<small>${RANGOS[rango(p)][1]}</small>`}</span></button>`; }).join("")}</div>
       </section>`;
     app.querySelectorAll("[data-mode]").forEach(b => b.addEventListener("click", () => { S.mode = b.dataset.mode; S.welcomed = true; save(); render.inicio(); }));
     app.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => go(b.dataset.go)));
-    app.querySelectorAll("[data-mod]").forEach(b => b.addEventListener("click", () => { F.mod = b.dataset.mod; go("fichas"); }));
+    app.querySelectorAll("[data-mod]").forEach(b => b.addEventListener("click", () => { T.mod = b.dataset.mod; go("tema"); }));
     $("#goCh").addEventListener("click", () => startQuiz(dailyQuestions(), "desafio"));
     $("#goQuick").addEventListener("click", () => startQuiz(shuffle(pool()).slice(0, 5), "rapida"));
   };
@@ -981,7 +1142,7 @@ const CASOS = [
         <span class="small muted" style="font-weight:800">${Q.i + 1}/${Q.list.length}</span>
       </section>
       <section class="stack" aria-live="polite">
-        <div class="row between"><span class="eyebrow">${Q.kind === "desafio" ? "Desafío del día · " : ""}${esc(modName(p.m))}</span><span class="level ${p.n === 2 ? "adv" : ""}">${p.n === 2 ? "Avanzada" : "Básica"}</span></div>
+        <div class="row between"><span class="eyebrow">${Q.kind === "desafio" ? "Desafío del día · " : Q.kind === "examen" ? "Examen · " : ""}${esc(modName(p.m))}</span><span class="level ${p.n === 2 ? "adv" : ""}">${p.n === 2 ? "Avanzada" : "Básica"}</span></div>
         <h2 class="qtitle">${esc(p.q)}</h2>
         <div class="opts">${p.order.map((oi, k) => {
           let cls = ""; if (answered) cls = oi === p.c ? "is-good" : oi === Q.picked ? "is-bad" : "dim";
@@ -1012,26 +1173,33 @@ const CASOS = [
     const t = Q.list.length, pct = Math.round(100 * Q.right / t);
     if (!Q.saved) {
       Q.saved = true;
-      S.rounds.push({ d: Date.now(), k: Q.kind, m: Q.kind === "practica" ? Q.mod : Q.kind, r: Q.right, t }); S.rounds = S.rounds.slice(-30);
+      S.rounds.push({ d: Date.now(), k: Q.kind, m: Q.kind === "practica" ? Q.mod : Q.kind === "examen" ? Q.exam : Q.kind, r: Q.right, t }); S.rounds = S.rounds.slice(-30);
       unlock("primer");
       if (Q.right === t && t >= 5) unlock("perfecta");
       if (Q.kind === "desafio" && !S.ch[today()]) { S.ch[today()] = { r: Q.right, t }; Q.gained += 30; addXP(30); unlock("desafio"); }
+      if (Q.kind === "examen") {
+        const prev = S.cert[Q.exam], ok = pct >= 80;
+        if (ok && !(prev && prev.ok)) { Q.gained += 50; addXP(50); Q.newCert = true; unlock("cert1"); } else Q.newCert = false;
+        if (!prev || Q.right >= prev.r) S.cert[Q.exam] = { r: Q.right, t, ok: ok || !!(prev && prev.ok), d: today() };
+        if (MODULOS.every(m => certified(m.id))) unlock("certall");
+      }
       save(); if (pct >= 80) confetti();
     }
-    const msg = pct === 100 ? "¡Perfecto! Dominas estos temas." : pct >= 80 ? "¡Muy bien! Vas por buen camino." : pct >= 50 ? "Buen avance. Repasa las fichas de lo que fallaste." : "Sigue practicando: repasa las fichas y vuelve a intentarlo.";
+    const exam = Q.kind === "examen";
+    const msg = exam ? (pct >= 80 ? (Q.newCert ? "¡Aprobaste! Tema certificado." : "¡Aprobaste otra vez!") : `Necesitas 80% para certificar. Te faltaron ${Math.ceil(0.8 * t) - Q.right} respuestas.`) : pct === 100 ? "¡Perfecto! Dominas estos temas." : pct >= 80 ? "¡Muy bien! Vas por buen camino." : pct >= 50 ? "Buen avance. Repasa las fichas de lo que fallaste." : "Sigue practicando: repasa las fichas y vuelve a intentarlo.";
     app.innerHTML = `
       <section class="card result">
-        <p class="eyebrow">${Q.kind === "desafio" ? "Desafío del día" : "Resultado"}</p>
+        <p class="eyebrow">${Q.kind === "desafio" ? "Desafío del día" : exam ? "Examen · " + esc(modName(Q.exam)) : "Resultado"}</p>${exam && pct >= 80 ? SEAL : ""}
         <span class="big" style="color:var(--primary)">${Q.right}/${t}</span>
         <h2 style="font-size:1.25rem">${msg}</h2>
         <div class="gain"><span>+${Q.gained} puntos</span>${Q.best >= 3 ? `<span>Mejor racha: ${Q.best}</span>` : ""}<span>Racha de días: ${streak()}</span></div>
         <div class="stack" style="width:100%">
           ${Q.missed.length ? `<button class="btn primary block" id="redo">Repetir las ${Q.missed.length} que fallé</button>` : ""}
-          <button class="btn block" id="home">Volver al inicio</button>
+          <button class="btn block" id="home">${exam ? "Volver al tema" : "Volver al inicio"}</button>
         </div>
       </section>
       ${Q.missed.length ? `<section class="card"><h2 style="font-size:1.1rem">Para repasar</h2><div class="missed stack">${Q.missed.map(p => `<div><b>${esc(p.q)}</b><span class="ans">${esc(p.o[p.c])}</span><span class="small muted">${esc(p.e)}</span>${srcHtml(p.s)}</div>`).join("")}</div></section>` : ""}`;
-    $("#home").addEventListener("click", () => go("inicio"));
+    $("#home").addEventListener("click", () => { if (exam) { T.mod = Q.exam; go("tema"); } else go("inicio"); });
     const r = $("#redo"); if (r) r.addEventListener("click", () => startQuiz(Q.missed, "errores"));
   }
   render.preguntas = () => {
@@ -1039,7 +1207,7 @@ const CASOS = [
     const avail = pool().filter(p => Q.mod === "all" || p.m === Q.mod);
     const wrong = pool().filter(p => (S.q[p.id] || {}).last === false);
     const last = S.rounds.slice(-4).reverse();
-    const label = r => r.k === "desafio" ? "Desafío del día" : r.k === "rapida" ? "Ronda rápida" : r.k === "errores" ? "Repaso de errores" : modName(r.m);
+    const label = r => r.k === "desafio" ? "Desafío del día" : r.k === "rapida" ? "Ronda rápida" : r.k === "errores" ? "Repaso de errores" : r.k === "examen" ? "Examen · " + modName(r.m) : modName(r.m);
     app.innerHTML = `
       <section class="stack">
         <h2 style="font-size:1.4rem">Preguntas</h2>
@@ -1147,6 +1315,55 @@ const CASOS = [
   }
 
   // ---------- perfil ----------
+  // ---------- tema: dominio y examen de certificación ----------
+  const T = { mod: "rol" };
+  render.tema = () => {
+    if (Q.list) return runQuiz();
+    const m = MODULOS.find(x => x.id === T.mod) || MODULOS[0], st = modStats(m.id), r = rango(st.pct);
+    const next = RANGOS[r + 1], ex = examList(m.id), best = S.cert[m.id];
+    const locked = !best && st.pct < 50;
+    const circ = 2 * Math.PI * 34;
+    const row = (lab, a, b, pct) => `<div><span>${lab}</span><b>${a} de ${b}</b><div class="bar"><i style="width:${pct}%"></i></div></div>`;
+    app.innerHTML = `
+      <section class="runner-top"><button class="x" id="back" aria-label="Volver al inicio">${ICON.x}</button><h2 style="font-size:1.3rem">${esc(m.nombre)}</h2></section>
+      <p class="small muted">${esc(m.desc)}</p>
+      <section class="card">
+        <div class="know">
+          <div class="ring" aria-label="Dominio ${st.pct}%"><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="none" stroke="var(--surface-2)" stroke-width="9"/><circle cx="40" cy="40" r="34" fill="none" stroke="var(--good)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${circ * (1 - st.pct / 100)}"/></svg><span class="lbl">${st.pct}%</span></div>
+          <div class="stack" style="gap:4px">
+            <p class="eyebrow">Tu dominio</p>
+            <h2 style="font-size:1.3rem">${RANGOS[r][1]} ${certified(m.id) ? SEAL : ""}</h2>
+            <p class="small muted">${next ? `Te faltan ${next[0] - st.pct} puntos de dominio para ${next[1]}.` : "Llegaste al rango más alto de este tema."}</p>
+          </div>
+        </div>
+        <div class="ranks">${RANGOS.map((x, k) => `<span class="${k <= r ? "on" : ""}">${x[1]}</span>`).join("")}</div>
+      </section>
+      <section class="card brk">
+        <p class="eyebrow">Qué cuenta para tu dominio</p>
+        ${row("Preguntas respondidas bien", st.pk, st.p, 100 * st.pk / Math.max(1, st.p))}
+        ${row("Fichas dominadas", st.fm, st.f, 100 * st.fm / Math.max(1, st.f))}
+        ${st.c ? row("Puntaje en casos", Math.round(st.cs * 10) / 10, st.c, 100 * st.cs / st.c) : ""}
+        <p class="small muted">Una pregunta cuenta si tu última respuesta fue correcta. Una ficha está dominada cuando la sabes varias veces seguidas en días distintos.</p>
+        <div class="row" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <button class="btn" id="tF">Fichas</button><button class="btn" id="tP">Preguntas</button>
+        </div>
+        ${st.c ? `<button class="btn block" id="tC">Casos del tema</button>` : ""}
+      </section>
+      <section class="challenge" style="flex-wrap:wrap">
+        <div class="medal">${ICON.medal}</div>
+        <div class="stack" style="gap:4px">
+          <h3>Examen de certificación</h3>
+          <p class="small">${ex.length} preguntas básicas y avanzadas. Apruebas con 80%${certified(m.id) ? "" : " y ganas 50 puntos"}.</p>
+        </div>
+        <p class="small" style="flex-basis:100%">${best ? `Tu mejor resultado: ${best.r} de ${best.t}.` : locked ? `Se desbloquea al llegar a Intermedio (50% de dominio). Te faltan ${50 - st.pct} puntos: responde bien las preguntas y domina las fichas del tema.` : "¡Desbloqueado! Ya tienes la base para rendirlo."}</p>
+        <button class="btn block ${certified(m.id) || locked ? "" : "primary"}" id="tE" style="flex-basis:100%" ${locked ? "disabled" : ""}>${locked ? "Bloqueado hasta Intermedio" : best ? "Repetir examen" : "Rendir examen"}</button>
+      </section>`;
+    $("#back").addEventListener("click", () => go("inicio"));
+    $("#tF").addEventListener("click", () => { F.mod = m.id; F.modo = "todas"; F.i = 0; go("fichas"); });
+    $("#tP").addEventListener("click", () => { Q.mod = m.id; go("preguntas"); });
+    const tc = $("#tC"); if (tc) tc.addEventListener("click", () => go("casos"));
+    $("#tE").addEventListener("click", () => { Q.exam = m.id; startQuiz(shuffle(ex), "examen"); });
+  };
   render.perfil = () => {
     const lv = levelOf(S.xp), st = streak();
     const prog = lv.to ? Math.round(100 * (S.xp - lv.from) / (lv.to - lv.from)) : 100;
@@ -1179,6 +1396,11 @@ const CASOS = [
         <p class="small muted">${lv.to ? `${lv.to - S.xp} puntos para ${NIVELES[lv.i + 1][1]}` : "¡Llegaste al nivel máximo!"}</p>
         <div class="row"><span class="pill fire">${ICON.fire.replace("<svg", '<svg width="18" height="18"')}${st} ${st === 1 ? "día" : "días"} de racha</span><span class="pill">${mastered()} fichas dominadas</span></div>
       </section>
+      ${(() => { const ks = Object.keys(S.hist).sort(), pts = ks.slice(-7), first = ks.length ? S.hist[ks[0]] : 0, now = globalPct(); return `<section class="card">
+        <div class="row between"><div><p class="eyebrow">Tu evolución</p><h2 style="font-size:1.2rem">Conocimiento total ${now}%</h2></div><span class="pill">${MODULOS.filter(m => certified(m.id)).length} de ${MODULOS.length} certificados</span></div>
+        ${pts.length > 1 ? `<div class="evo">${pts.map(k => `<div><span>${S.hist[k]}%</span><i style="height:${Math.max(6, 100 * S.hist[k] / Math.max(1, ...pts.map(x => S.hist[x])))}%"></i><span>${k.slice(8)}/${k.slice(5, 7)}</span></div>`).join("")}</div>` : ""}
+        <p class="small muted">${ks.length > 1 && now > first ? `Empezaste con ${first}% el ${ks[0].slice(8)}/${ks[0].slice(5, 7)}. Llevas +${now - first} puntos de dominio.` : "Cada día que estudies quedará marcado aquí, para que veas cómo avanza tu conocimiento."}</p>
+      </section>`; })()}
       <section class="card">
         <p class="eyebrow">Meta diaria</p>
         <div class="seg" role="group" aria-label="Meta diaria">${[[20, "Suave · 20"], [30, "Normal · 30"], [50, "Intensa · 50"]].map(([g, l]) => `<button data-goal="${g}" aria-pressed="${S.goal === g}">${l}</button>`).join("")}</div>
@@ -1195,7 +1417,7 @@ const CASOS = [
       </section>
       <section class="card">
         <h2 style="font-size:1.1rem">Fuentes oficiales</h2>
-        <p class="small muted">Todo el contenido cita leyes y documentos de BCN (Ley Chile), Mineduc, Superintendencia de Educación, ChileAtiende y SENDA. Revisado con la normativa vigente a octubre de 2026.</p>
+        <p class="small muted">Todo el contenido cita leyes y documentos de BCN (Ley Chile), Mineduc, Superintendencia de Educación, Diario Oficial, Poder Judicial, ChileAtiende y SENDA. Revisado con la normativa vigente a octubre de 2026.</p>
         <button class="btn block" id="fuentes">Ver las ${Object.keys(FUENTES).length} fuentes</button>
       </section>
       <div class="row small muted" style="justify-content:center"><button class="link" id="reset">Borrar mi avance</button><span id="resetConfirm" hidden>¿Seguro? <button class="link" id="resetYes">Sí, borrar</button> · <button class="link" id="resetNo">Cancelar</button></span></div>`;
