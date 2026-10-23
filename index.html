@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Libro del Inspector</title>
 <meta name="theme-color" content="#2346A0">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Inspector">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Nunito:wght@400;600;700;800&display=swap">
@@ -1364,6 +1371,17 @@ const CASOS = [
     const tc = $("#tC"); if (tc) tc.addEventListener("click", () => go("casos"));
     $("#tE").addEventListener("click", () => { Q.exam = m.id; startQuiz(shuffle(ex), "examen"); });
   };
+  // ---------- instalar como app ----------
+  const install = { ev: null, ios: /iphone|ipad|ipod/i.test(navigator.userAgent), standalone: matchMedia("(display-mode: standalone)").matches || navigator.standalone === true };
+  addEventListener("beforeinstallprompt", e => { e.preventDefault(); install.ev = e; if (view === "perfil") render.perfil(); });
+  addEventListener("appinstalled", () => { install.ev = null; install.standalone = true; toast("App instalada en tu teléfono"); if (view === "perfil") render.perfil(); });
+  if ("serviceWorker" in navigator && isSecureContext) navigator.serviceWorker.register("sw.js").catch(() => {});
+  function installCard() {
+    if (install.standalone) return "";
+    if (install.ev) return `<section class="card"><p class="eyebrow">App</p><h2 style="font-size:1.15rem">Instala el Libro del Inspector</h2><p class="small muted">Queda como app en tu teléfono, con su ícono, y se abre aunque no tengas internet.</p><button class="btn primary block" id="installBtn">Instalar app</button></section>`;
+    if (install.ios) return `<section class="card"><p class="eyebrow">App</p><h2 style="font-size:1.15rem">Instálala en tu iPhone</h2><p class="small muted">En Safari, toca el botón Compartir y luego «Agregar a pantalla de inicio».</p></section>`;
+    return "";
+  }
   render.perfil = () => {
     const lv = levelOf(S.xp), st = streak();
     const prog = lv.to ? Math.round(100 * (S.xp - lv.from) / (lv.to - lv.from)) : 100;
@@ -1401,6 +1419,7 @@ const CASOS = [
         ${pts.length > 1 ? `<div class="evo">${pts.map(k => `<div><span>${S.hist[k]}%</span><i style="height:${Math.max(6, 100 * S.hist[k] / Math.max(1, ...pts.map(x => S.hist[x])))}%"></i><span>${k.slice(8)}/${k.slice(5, 7)}</span></div>`).join("")}</div>` : ""}
         <p class="small muted">${ks.length > 1 && now > first ? `Empezaste con ${first}% el ${ks[0].slice(8)}/${ks[0].slice(5, 7)}. Llevas +${now - first} puntos de dominio.` : "Cada día que estudies quedará marcado aquí, para que veas cómo avanza tu conocimiento."}</p>
       </section>`; })()}
+      ${installCard()}
       <section class="card">
         <p class="eyebrow">Meta diaria</p>
         <div class="seg" role="group" aria-label="Meta diaria">${[[20, "Suave · 20"], [30, "Normal · 30"], [50, "Intensa · 50"]].map(([g, l]) => `<button data-goal="${g}" aria-pressed="${S.goal === g}">${l}</button>`).join("")}</div>
@@ -1424,6 +1443,7 @@ const CASOS = [
     app.querySelectorAll("[data-goal]").forEach(b => b.addEventListener("click", () => { S.goal = +b.dataset.goal; save(); render.perfil(); paintTop(); }));
     app.querySelectorAll("[data-mode]").forEach(b => b.addEventListener("click", () => { S.mode = b.dataset.mode; S.welcomed = true; save(); render.perfil(); }));
     $("#fuentes").addEventListener("click", () => go("fuentes"));
+    const ib = $("#installBtn"); if (ib) ib.addEventListener("click", async () => { const e = install.ev; install.ev = null; e.prompt(); await e.userChoice.catch(() => {}); render.perfil(); });
     const li = $("#login1"); if (li) li.addEventListener("click", () => { L.mode = "entrar"; showLogin(); });
     const lo = $("#logout"); if (lo) lo.addEventListener("click", signOut);
     const rc = $("#resetConfirm");
