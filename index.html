@@ -79,7 +79,7 @@ a { color: var(--primary); }
 
 main { max-width: 560px; margin: 0 auto; padding-inline: 16px; padding-block: 18px calc(96px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 18px; }
 .nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; background: var(--surface); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px); }
-.nav-in { max-width: 560px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); }
+.nav-in { max-width: 560px; margin: 0 auto; display: grid; grid-template-columns: repeat(6, 1fr); }
 .nav button { border: 0; background: none; padding: 8px 2px 10px; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 0.72rem; font-weight: 800; color: var(--muted); }
 .nav button svg { width: 24px; height: 24px; }
 .nav button[aria-current="page"] { color: var(--primary); }
@@ -138,6 +138,32 @@ main { max-width: 560px; margin: 0 auto; padding-inline: 16px; padding-block: 18
 .bar { height: 8px; background: var(--surface-2); border-radius: 99px; overflow: hidden; margin-top: 6px; }
 .bar i { display: block; height: 100%; background: var(--good); border-radius: 99px; transition: width .4s; }
 .bar.xpbar i { background: var(--gold); }
+
+.path { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 6px 0 10px; }
+.lvl { width: 100%; background: var(--primary); color: var(--on-primary); border-radius: 18px; padding: 14px 16px; display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: center; }
+.lvl.off { background: var(--surface-2); color: var(--muted); }
+.lvl h3 { font-size: 1.1rem; }
+.lvl p { font-size: 0.85rem; opacity: .9; }
+.lvl .cnt { font-weight: 800; font-variant-numeric: tabular-nums; font-size: 0.9rem; }
+.pmod { width: 100%; display: flex; align-items: center; gap: 10px; margin-top: 4px; color: var(--muted); font-weight: 800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: .04em; }
+.pmod::before, .pmod::after { content: ""; flex: 1; height: 2px; background: var(--line); border-radius: 2px; }
+.node { position: relative; width: 70px; height: 70px; border-radius: 50%; border: 0; display: grid; place-items: center; font-family: var(--font-display); font-weight: 800; font-size: 1.3rem; background: var(--primary); color: var(--on-primary); box-shadow: 0 6px 0 var(--primary-press); }
+.node:active { transform: translateY(3px); box-shadow: 0 3px 0 var(--primary-press); }
+.node svg { width: 30px; height: 30px; }
+.node.done { background: var(--gold); color: var(--ink); box-shadow: 0 6px 0 #C9952A; }
+.node.lock { background: var(--surface-2); color: var(--muted); box-shadow: 0 6px 0 var(--line); }
+.node.exam { border-radius: 22px; background: var(--copper); color: var(--surface); box-shadow: 0 6px 0 #A85A2A; }
+.node.exam.lock { background: var(--surface-2); color: var(--muted); box-shadow: 0 6px 0 var(--line); }
+.node .st { position: absolute; bottom: -22px; left: 50%; transform: translateX(-50%); font-size: 0.8rem; letter-spacing: 1px; color: var(--gold); white-space: nowrap; font-family: var(--font-body); }
+.node .st i { color: var(--line); font-style: normal; }
+.node.cur { outline: 4px solid var(--gold-soft); outline-offset: 5px; }
+.node .bub { position: absolute; top: -40px; left: 50%; transform: translateX(-50%); background: var(--surface); color: var(--primary); border: 2px solid var(--line); border-radius: 10px; padding: 3px 10px; font-size: 0.75rem; font-family: var(--font-body); font-weight: 800; white-space: nowrap; }
+.nodewrap { padding-bottom: 14px; }
+.nodewrap.cur { padding-top: 34px; }
+.cont { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center; border: 2px solid var(--primary); }
+.cont .node { width: 58px; height: 58px; font-size: 1.1rem; }
+.learn .ans { font-size: 1.08rem; line-height: 1.55; }
+@media (prefers-reduced-motion: no-preference) { .node.cur { animation: bob 1.6s ease-in-out infinite; } @keyframes bob { 50% { transform: translateY(-4px); } } }
 
 .mod .rk { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
 .mod .rk small { font-size: 0.7rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
@@ -273,6 +299,7 @@ ul.keys { margin: 0; padding-left: 20px; display: flex; flex-direction: column; 
 <nav class="nav" aria-label="Secciones">
   <div class="nav-in">
     <button data-view="inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Inicio</button>
+    <button data-view="camino"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h7a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h7"/></svg>Camino</button>
     <button data-view="fichas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/></svg>Fichas</button>
     <button data-view="preguntas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14"/><path d="M12 17.5h.01"/></svg>Preguntas</button>
     <button data-view="casos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg>Casos</button>
@@ -733,7 +760,7 @@ const CASOS = [
   };
 
   // ---------- estado ----------
-  const fresh = () => ({ v: 2, mode: "formacion", goal: 30, xp: 0, days: {}, met: {}, ch: {}, cards: {}, q: {}, cases: {}, badges: {}, rounds: [], cert: {}, hist: {}, combo: 0, seenFuentes: false, welcomed: false });
+  const fresh = () => ({ v: 2, mode: "formacion", goal: 30, xp: 0, days: {}, met: {}, ch: {}, cards: {}, q: {}, cases: {}, badges: {}, rounds: [], cert: {}, hist: {}, path: {}, chest: {}, combo: 0, seenFuentes: false, welcomed: false });
   let S = loadLocal();
   function loadLocal() {
     try {
@@ -773,7 +800,7 @@ const CASOS = [
     const base = (b.xp || 0) > (a.xp || 0) ? b : a, other = base === a ? b : a;
     const out = Object.assign(fresh(), base);
     ["days"].forEach(k => { out[k] = Object.assign({}, other[k]); Object.entries(base[k] || {}).forEach(([d, v]) => { out[k][d] = Math.max(v, out[k][d] || 0); }); });
-    ["met", "ch", "badges", "cert", "hist"].forEach(k => { out[k] = Object.assign({}, other[k] || {}, base[k] || {}); });
+    ["met", "ch", "badges", "cert", "hist", "path", "chest"].forEach(k => { out[k] = Object.assign({}, other[k] || {}, base[k] || {}); });
     out.welcomed = a.welcomed || b.welcomed;
     return out;
   }
@@ -896,7 +923,11 @@ const CASOS = [
     { id: "nivel4", n: "De patio", d: "Llega a Inspector/a de patio", ic: "shield" },
     { id: "nivel7", n: "Inspección general", d: "Llega a Inspector/a general", ic: "shield" },
     { id: "cert1", n: "Certificado/a", d: "Aprueba tu primer examen de tema", ic: "medal" },
-    { id: "certall", n: "Experto/a integral", d: "Certifica todos los temas", ic: "shield" }
+    { id: "certall", n: "Experto/a integral", d: "Certifica todos los temas", ic: "shield" },
+    { id: "lec1", n: "En camino", d: "Supera tu primera lección", ic: "star" },
+    { id: "camino1", n: "Fundamentos", d: "Completa el nivel 1 del camino", ic: "medal" },
+    { id: "camino2", n: "Protección", d: "Completa el nivel 2 del camino", ic: "medal" },
+    { id: "camino3", n: "Especialista", d: "Completa el nivel 3 del camino", ic: "medal" }
   ];
   function unlock(id) {
     if (S.badges[id]) return;
@@ -961,11 +992,11 @@ const CASOS = [
 
   // ---------- navegación ----------
   let view = "inicio";
-  const VIEWS = ["inicio", "fichas", "preguntas", "casos", "perfil", "fuentes", "tema"];
+  const VIEWS = ["inicio", "fichas", "preguntas", "casos", "perfil", "fuentes", "tema", "camino", "leccion"];
   const render = {};
   function go(v) {
     view = VIEWS.includes(v) ? v : "inicio";
-    const tab = view === "fuentes" ? "perfil" : view === "tema" ? "inicio" : view;
+    const tab = view === "fuentes" ? "perfil" : view === "tema" ? "inicio" : view === "leccion" ? "camino" : view;
     document.querySelectorAll(".nav button").forEach(b => b.setAttribute("aria-current", b.dataset.view === tab ? "page" : "false"));
     try { history.replaceState(null, "", "#" + view); } catch (e) {}
     Q.list = null; C.cur = null;
@@ -1023,6 +1054,15 @@ const CASOS = [
       <section class="week" aria-label="Últimos 7 días">
         ${week.map(w => { const wd = new Date(w + "T12:00:00Z").getUTCDay(); return `<div class="day ${S.met[w] ? "done" : ""} ${w === d ? "today" : ""}"><i>${S.met[w] ? ICON.check.replace('stroke-width="3"', 'stroke-width="3" width="16" height="16"') : ""}</i><b>${DIAS[wd]}</b></div>`; }).join("")}
       </section>
+      ${(() => { const L = nextLesson(); if (!L) return ""; return `<section class="card cont">
+        <button class="node cur" id="goPath2" aria-label="Continuar lección">${L.i + 1}</button>
+        <div class="stack" style="gap:4px">
+          <p class="eyebrow">Tu camino · ${esc(CAMINO[levelOfMod(L.m)].n)}</p>
+          <h3 style="font-size:1.1rem">${esc(modName(L.m))} · Lección ${L.i + 1}</h3>
+          <p class="small muted">${S.chest[d] ? "Cofre del día abierto. ¿Una lección más?" : "Termina una lección hoy y abre el cofre del día: +20 puntos."}</p>
+          <button class="btn primary" id="goPath" style="justify-self:start">Continuar</button>
+        </div>
+      </section>`; })()}
       <section class="challenge">
         <div class="medal">${ICON.medal}</div>
         <div class="stack" style="gap:4px">
@@ -1054,6 +1094,7 @@ const CASOS = [
     app.querySelectorAll("[data-mode]").forEach(b => b.addEventListener("click", () => { S.mode = b.dataset.mode; S.welcomed = true; save(); render.inicio(); }));
     app.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => go(b.dataset.go)));
     app.querySelectorAll("[data-mod]").forEach(b => b.addEventListener("click", () => { T.mod = b.dataset.mod; go("tema"); }));
+    const gp = () => startLesson(nextLesson()); [$("#goPath"), $("#goPath2")].forEach(b => b && b.addEventListener("click", gp));
     $("#goCh").addEventListener("click", () => startQuiz(dailyQuestions(), "desafio"));
     $("#goQuick").addEventListener("click", () => startQuiz(shuffle(pool()).slice(0, 5), "rapida"));
   };
@@ -1149,7 +1190,7 @@ const CASOS = [
         <span class="small muted" style="font-weight:800">${Q.i + 1}/${Q.list.length}</span>
       </section>
       <section class="stack" aria-live="polite">
-        <div class="row between"><span class="eyebrow">${Q.kind === "desafio" ? "Desafío del día · " : Q.kind === "examen" ? "Examen · " : ""}${esc(modName(p.m))}</span><span class="level ${p.n === 2 ? "adv" : ""}">${p.n === 2 ? "Avanzada" : "Básica"}</span></div>
+        <div class="row between"><span class="eyebrow">${Q.kind === "desafio" ? "Desafío del día · " : Q.kind === "examen" ? "Examen · " : Q.kind === "leccion" ? "Lección · " : ""}${esc(modName(p.m))}</span><span class="level ${p.n === 2 ? "adv" : ""}">${p.n === 2 ? "Avanzada" : "Básica"}</span></div>
         <h2 class="qtitle">${esc(p.q)}</h2>
         <div class="opts">${p.order.map((oi, k) => {
           let cls = ""; if (answered) cls = oi === p.c ? "is-good" : oi === Q.picked ? "is-bad" : "dim";
@@ -1177,6 +1218,7 @@ const CASOS = [
     const n = $("#nextQ"); if (n) { n.addEventListener("click", () => { Q.i++; Q.picked = null; runQuiz(); window.scrollTo(0, 0); }); n.focus({ preventScroll: false }); }
   }
   function quizEnd() {
+    if (Q.kind === "leccion") return lessonEnd();
     const t = Q.list.length, pct = Math.round(100 * Q.right / t);
     if (!Q.saved) {
       Q.saved = true;
@@ -1214,7 +1256,7 @@ const CASOS = [
     const avail = pool().filter(p => Q.mod === "all" || p.m === Q.mod);
     const wrong = pool().filter(p => (S.q[p.id] || {}).last === false);
     const last = S.rounds.slice(-4).reverse();
-    const label = r => r.k === "desafio" ? "Desafío del día" : r.k === "rapida" ? "Ronda rápida" : r.k === "errores" ? "Repaso de errores" : r.k === "examen" ? "Examen · " + modName(r.m) : modName(r.m);
+    const label = r => r.k === "desafio" ? "Desafío del día" : r.k === "rapida" ? "Ronda rápida" : r.k === "errores" ? "Repaso de errores" : r.k === "examen" ? "Examen · " + modName(r.m) : r.k === "leccion" ? "Lección · " + modName(r.m) : modName(r.m);
     app.innerHTML = `
       <section class="stack">
         <h2 style="font-size:1.4rem">Preguntas</h2>
@@ -1322,13 +1364,136 @@ const CASOS = [
   }
 
   // ---------- perfil ----------
+  // ---------- camino: lecciones en orden, agrupadas en niveles ----------
+  const CAMINO = [
+    { n: "Nivel 1 · Fundamentos", d: "Lo esencial para tu primer día de trabajo.", mods: ["rol", "norma", "seg"] },
+    { n: "Nivel 2 · Convivencia y protección", d: "Cómo actuar ante conflictos, faltas y vulneraciones.", mods: ["conv", "prot", "proc"] },
+    { n: "Nivel 3 · Especialización", d: "TEA, inclusión y apoyos para potenciar tu perfil.", mods: ["tea", "inc"] }
+  ];
+  function lessonsOf(m) {
+    const f = FICHAS.filter(x => x.m === m), out = [];
+    for (let i = 0; i < f.length; i += 3) out.push({ id: m + "-" + i / 3, m, i: i / 3, fichas: f.slice(i, i + 3) });
+    return out;
+  }
+  function lessonQs(L) {
+    const keys = new Set(L.fichas.flatMap(f => f.s.map(s => s[0]))), qs = pool().filter(p => p.m === L.m), rot = L.i * 3;
+    return qs.map((p, k) => ({ p, sc: 100 * p.s.filter(s => keys.has(s[0])).length - (k - rot + qs.length) % qs.length }))
+      .sort((a, b) => b.sc - a.sc).slice(0, 4).map(x => x.p);
+  }
+  const levelLessons = li => CAMINO[li].mods.flatMap(lessonsOf);
+  const modLessonsDone = m => lessonsOf(m).every(L => S.path[L.id]);
+  const levelDone = li => levelLessons(li).every(L => S.path[L.id]);
+  const levelOpen = li => S.mode === "profesional" || li === 0 || levelDone(li - 1);
+  const levelOfMod = m => CAMINO.findIndex(l => l.mods.includes(m));
+  function lessonOpen(L) { return levelOpen(levelOfMod(L.m)) && (L.i === 0 || !!S.path[L.m + "-" + (L.i - 1)]); }
+  function nextLesson() {
+    for (let li = 0; li < CAMINO.length; li++) {
+      if (!levelOpen(li)) return null;
+      const L = levelLessons(li).find(x => !S.path[x.id] && lessonOpen(x));
+      if (L) return L;
+    }
+    return null;
+  }
+  const findLesson = id => lessonsOf(id.split("-")[0]).find(L => L.id === id);
+  const LS = { L: null, k: 0 };
+  function startLesson(L) { LS.L = L; LS.k = 0; Q.list = null; view = "leccion"; render.leccion(); window.scrollTo(0, 0); }
+  render.leccion = () => {
+    if (Q.list) return runQuiz();
+    const L = LS.L; if (!L || LS.k >= L.fichas.length) { LS.L = null; return go("camino"); }
+    const f = L.fichas[LS.k];
+    app.innerHTML = `
+      <section class="runner-top">
+        <button class="x" id="quit" aria-label="Salir de la lección">${ICON.x}</button>
+        <div class="progress"><i style="width:${100 * LS.k / (L.fichas.length + 1)}%"></i></div>
+        <span class="small muted" style="font-weight:800">${LS.k + 1}/${L.fichas.length}</span>
+      </section>
+      <section class="card learn">
+        <p class="eyebrow">${esc(modName(L.m))} · Lección ${L.i + 1} · Aprende</p>
+        <h2 style="font-size:1.3rem">${esc(f.t)}</h2>
+        <p class="ans">${esc(f.r)}</p>
+        ${srcHtml(f.s)}
+      </section>
+      <p class="small muted">${LS.k + 1 < L.fichas.length ? "Lee con calma. Después vienen 4 preguntas sobre esto." : "Ahora 4 preguntas para ver cuánto aprendiste."}</p>
+      <button class="btn primary block" id="nextL">${LS.k + 1 < L.fichas.length ? "Entendido" : "Ir a las preguntas"}</button>`;
+    $("#quit").addEventListener("click", () => { LS.L = null; go("camino"); });
+    $("#nextL").addEventListener("click", () => {
+      LS.k++;
+      if (LS.k < L.fichas.length) { render.leccion(); window.scrollTo(0, 0); return; }
+      startQuiz(shuffle(lessonQs(L)), "leccion");
+    });
+  };
+  function lessonEnd() {
+    const L = LS.L, t = Q.list.length;
+    const stars = Q.right === t ? 3 : Q.right >= t - 1 ? 2 : Q.right >= Math.ceil(t / 2) ? 1 : 0;
+    if (!Q.saved) {
+      Q.saved = true; Q.chest = false;
+      const prev = S.path[L.id] || 0, lvBefore = levelOfMod(L.m), wasDone = levelDone(lvBefore);
+      if (stars > prev) S.path[L.id] = stars;
+      if (stars && !prev) { Q.gained += 10; addXP(10); unlock("lec1"); }
+      if (stars && !S.chest[today()]) { S.chest[today()] = true; Q.chest = true; Q.gained += 20; addXP(20); }
+      L.fichas.forEach(f => { if (!S.cards[f.id]) S.cards[f.id] = { b: 1, due: addDays(today(), 1) }; });
+      if (!wasDone && levelDone(lvBefore)) { Q.levelUp = lvBefore; unlock("camino" + (lvBefore + 1)); } else Q.levelUp = null;
+      S.rounds.push({ d: Date.now(), k: "leccion", m: L.m, r: Q.right, t }); S.rounds = S.rounds.slice(-30);
+      unlock("primer"); save();
+      if (stars) confetti();
+    }
+    const nx = nextLesson();
+    const msg = Q.levelUp != null ? `¡Completaste el ${CAMINO[Q.levelUp].n}!` : stars === 3 ? "¡Lección perfecta!" : stars ? "¡Lección superada!" : "Te faltó poco. Necesitas 2 de 4 para avanzar.";
+    app.innerHTML = `
+      <section class="card result">
+        <p class="eyebrow">${esc(modName(L.m))} · Lección ${L.i + 1}</p>
+        <span class="stars" style="font-size:2.4rem" aria-label="${stars} de 3 estrellas">${"★".repeat(stars)}<span style="color:var(--line)">${"★".repeat(3 - stars)}</span></span>
+        <h2 style="font-size:1.25rem">${msg}</h2>
+        <div class="gain"><span>${Q.right} de ${t} correctas</span><span>+${Q.gained} puntos</span>${Q.chest ? "<span>Cofre del día +20</span>" : ""}</div>
+        <div class="stack" style="width:100%">
+          ${stars && nx ? `<button class="btn primary block" id="nextLesson">Siguiente lección</button>` : ""}
+          ${!stars ? `<button class="btn primary block" id="again">Intentar de nuevo</button>` : ""}
+          <button class="btn block" id="toPath">Volver al camino</button>
+        </div>
+      </section>
+      ${Q.missed.length ? `<section class="card"><h2 style="font-size:1.1rem">Para repasar</h2><div class="missed stack">${Q.missed.map(p => `<div><b>${esc(p.q)}</b><span class="ans">${esc(p.o[p.c])}</span><span class="small muted">${esc(p.e)}</span>${srcHtml(p.s)}</div>`).join("")}</div></section>` : ""}`;
+    const n = $("#nextLesson"); if (n) n.addEventListener("click", () => startLesson(nx));
+    const a = $("#again"); if (a) a.addEventListener("click", () => startLesson(L));
+    $("#toPath").addEventListener("click", () => { LS.L = null; go("camino"); });
+  }
+  render.camino = () => {
+    const nx = nextLesson(), OFF = [0, 44, 64, 44, 0, -44, -64, -44];
+    let k = 0;
+    const done = CAMINO.reduce((a, _, li) => a + levelLessons(li).filter(L => S.path[L.id]).length, 0), total = CAMINO.reduce((a, _, li) => a + levelLessons(li).length, 0);
+    app.innerHTML = `
+      <section class="stack">
+        <div class="row between"><h2 style="font-size:1.4rem">Camino del inspector</h2><span class="small muted">${done} de ${total} lecciones</span></div>
+        <p class="muted small">Cada lección son 3 fichas y 4 preguntas. Termina una al día para abrir el cofre (+20 puntos) y avanzar de nivel.${S.mode === "profesional" ? "" : " Cada nivel se abre al completar el anterior."}</p>
+      </section>
+      ${CAMINO.map((lv, li) => { const open = levelOpen(li), ls = levelLessons(li); return `
+      <section class="path">
+        <div class="lvl ${open ? "" : "off"}"><div><h3>${lv.n}</h3><p>${open ? lv.d : "Se abre al completar el nivel anterior."}</p></div><span class="cnt">${ls.filter(L => S.path[L.id]).length}/${ls.length}</span></div>
+        ${lv.mods.map(m => { const mod = MODULOS.find(x => x.id === m), exOpen = certified(m) || modLessonsDone(m) || modPct(m) >= 50; return `
+          <div class="pmod">${esc(mod.nombre)}</div>
+          ${lessonsOf(m).map(L => { const st = S.path[L.id] || 0, op = lessonOpen(L), cur = nx && nx.id === L.id, x = OFF[k++ % OFF.length]; return `
+            <div class="nodewrap ${cur ? "cur" : ""}" style="transform:translateX(${x}px)">
+              <button class="node ${st ? "done" : op ? "" : "lock"} ${cur ? "cur" : ""}" data-l="${L.id}" ${op || st ? "" : "disabled"} aria-label="${esc(mod.nombre)}, lección ${L.i + 1}${st ? ", " + st + " estrellas" : op ? "" : ", bloqueada"}">
+                ${cur ? `<span class="bub">Empezar</span>` : ""}${st ? ICON.check.replace("<svg", '<svg width="30" height="30"') : op ? L.i + 1 : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>'}
+                ${st ? `<span class="st">${"★".repeat(st)}<i>${"★".repeat(3 - st)}</i></span>` : ""}
+              </button>
+            </div>`; }).join("")}
+          <div class="nodewrap" style="transform:translateX(${OFF[k++ % OFF.length]}px)">
+            <button class="node exam ${exOpen || certified(m) ? "" : "lock"}" data-exam="${m}" aria-label="Examen de ${esc(mod.nombre)}">${ICON.medal.replace("<svg", '<svg width="30" height="30"')}
+              ${certified(m) ? `<span class="st">Certificado</span>` : ""}</button>
+          </div>`; }).join("")}
+      </section>`; }).join("")}
+      ${nx ? "" : `<section class="card result"><h2>¡Terminaste el camino!</h2><p class="muted">Sigue con el repaso de fichas y los exámenes para mantener tu dominio.</p></section>`}`;
+    app.querySelectorAll("[data-l]").forEach(b => b.addEventListener("click", () => startLesson(findLesson(b.dataset.l))));
+    app.querySelectorAll("[data-exam]").forEach(b => b.addEventListener("click", () => { T.mod = b.dataset.exam; go("tema"); }));
+    const cur = app.querySelector(".node.cur"); if (cur) cur.scrollIntoView({ block: "center" });
+  };
   // ---------- tema: dominio y examen de certificación ----------
   const T = { mod: "rol" };
   render.tema = () => {
     if (Q.list) return runQuiz();
     const m = MODULOS.find(x => x.id === T.mod) || MODULOS[0], st = modStats(m.id), r = rango(st.pct);
     const next = RANGOS[r + 1], ex = examList(m.id), best = S.cert[m.id];
-    const locked = !best && st.pct < 50;
+    const locked = !best && st.pct < 50 && !modLessonsDone(m.id);
     const circ = 2 * Math.PI * 34;
     const row = (lab, a, b, pct) => `<div><span>${lab}</span><b>${a} de ${b}</b><div class="bar"><i style="width:${pct}%"></i></div></div>`;
     app.innerHTML = `
@@ -1362,8 +1527,8 @@ const CASOS = [
           <h3>Examen de certificación</h3>
           <p class="small">${ex.length} preguntas básicas y avanzadas. Apruebas con 80%${certified(m.id) ? "" : " y ganas 50 puntos"}.</p>
         </div>
-        <p class="small" style="flex-basis:100%">${best ? `Tu mejor resultado: ${best.r} de ${best.t}.` : locked ? `Se desbloquea al llegar a Intermedio (50% de dominio). Te faltan ${50 - st.pct} puntos: responde bien las preguntas y domina las fichas del tema.` : "¡Desbloqueado! Ya tienes la base para rendirlo."}</p>
-        <button class="btn block ${certified(m.id) || locked ? "" : "primary"}" id="tE" style="flex-basis:100%" ${locked ? "disabled" : ""}>${locked ? "Bloqueado hasta Intermedio" : best ? "Repetir examen" : "Rendir examen"}</button>
+        <p class="small" style="flex-basis:100%">${best ? `Tu mejor resultado: ${best.r} de ${best.t}.` : locked ? `Se desbloquea al terminar las lecciones de este tema en el Camino, o al llegar a Intermedio (te faltan ${50 - st.pct} puntos).` : "¡Desbloqueado! Ya tienes la base para rendirlo."}</p>
+        <button class="btn block ${certified(m.id) || locked ? "" : "primary"}" id="tE" style="flex-basis:100%" ${locked ? "disabled" : ""}>${locked ? "Bloqueado por ahora" : best ? "Repetir examen" : "Rendir examen"}</button>
       </section>`;
     $("#back").addEventListener("click", () => go("inicio"));
     $("#tF").addEventListener("click", () => { F.mod = m.id; F.modo = "todas"; F.i = 0; go("fichas"); });

@@ -1,5 +1,5 @@
 // Guarda la app en el teléfono para abrirla sin conexión.
-const CACHE = "libro-inspector-v3";
+const CACHE = "libro-inspector-v4";
 const CORE = ["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/maskable-512.png", "icons/apple-touch-icon.png"];
 const CDN = ["www.gstatic.com", "fonts.googleapis.com", "fonts.gstatic.com"];
 
